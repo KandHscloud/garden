@@ -1760,7 +1760,6 @@ z-index: 11;
     <div class="login-box">
         <img src="https://hackmd.io/_uploads/SJN8gdFF1g.png" alt="Mr.K&D's Mascot" class="login-mascot">
         <h2 class="login-title">歡迎回來</h2>        
-歡迎回來
         <p>請輸入密碼繼續</p>
         <input 
             type="password" 
@@ -1772,11 +1771,11 @@ z-index: 11;
             pattern="[0-9]*"
             maxlength="4"
         >
-        <button onclick="checkMainPassword()" class="login-button">進入首頁</button>
+        <button id="loginButton" class="login-button">進入首頁</button>
         <div id="mainErrorMessage" class="login-error"></div>
     </div>
 </div>
-	
+
     <div class="app-grid">
     <a href="https://sites.google.com/view/kdtrip-to-jp-2025/%E9%A6%96%E9%A0%81" class="app-card" target="_blank" rel="noopener noreferrer">
         <div class="icon-wrapper fun-trip">🌍</div>
@@ -3033,6 +3032,54 @@ z-index: 11;
 
 
     <script>
+		// 監聽 DOM 載入完成
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM 載入完成');
+    
+    // 綁定登入按鈕點擊事件
+    document.getElementById('loginButton').addEventListener('click', function() {
+        checkMainPassword();
+    });
+    
+    // 綁定密碼輸入框 Enter 鍵事件
+    document.getElementById('mainPasswordInput').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            checkMainPassword();
+        }
+    });
+    
+    // 檢查是否已經登入
+    const loggedIn = localStorage.getItem('kd_loggedIn');
+    const loginTime = localStorage.getItem('kd_loginTime');
+    const currentTime = new Date().getTime();
+    
+    if (loggedIn === 'true' && loginTime && (currentTime - parseInt(loginTime)) < 3600000) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.querySelector('.app-grid').classList.add('visible');
+    }
+});
+
+// 檢查密碼函數
+function checkMainPassword() {
+    const password = document.getElementById('mainPasswordInput').value;
+    console.log('檢查密碼:', password);
+    
+    if (password === '0915') {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.querySelector('.app-grid').classList.add('visible');
+        localStorage.setItem('kd_loggedIn', 'true');
+        localStorage.setItem('kd_loginTime', new Date().getTime());
+    } else {
+        document.getElementById('mainErrorMessage').textContent = '密碼錯誤，請重試';
+        document.getElementById('mainPasswordInput').value = '';
+        
+        const input = document.getElementById('mainPasswordInput');
+        input.classList.add('shake');
+        setTimeout(() => {
+            input.classList.remove('shake');
+        }, 500);
+    }
+}
         // 相簿資料
         const memories = [
             {
@@ -3160,74 +3207,111 @@ z-index: 11;
 
 
         // 檢查密碼
-    function checkMainPassword() {
-        const password = document.getElementById('mainPasswordInput').value;
-        if (password === '0915') {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.querySelector('.app-grid').classList.add('visible');
-            // 儲存登入狀態
-            localStorage.setItem('kd_loggedIn', 'true');
-            localStorage.setItem('kd_loginTime', new Date().getTime());
-        } else {
-            document.getElementById('mainErrorMessage').textContent = '密碼錯誤，請重試';
-            document.getElementById('mainPasswordInput').value = '';
-            // 震動輸入框效果
-            const input = document.getElementById('mainPasswordInput');
-            input.classList.add('shake');
-            setTimeout(() => {
-                input.classList.remove('shake');
-            }, 500);
-        }
-    }
-
-    // 添加回車鍵功能
-    document.getElementById('mainPasswordInput').addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            checkMainPassword();
-        }
-    });
-
-    // 頁面載入時，檢查登入狀態
-    document.addEventListener('DOMContentLoaded', function() {
-        const loggedIn = localStorage.getItem('kd_loggedIn');
-        const loginTime = localStorage.getItem('kd_loginTime');
-        const currentTime = new Date().getTime();
+function checkMainPassword() {
+    const password = document.getElementById('mainPasswordInput').value;
+    if (password === '0915') {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.querySelector('.app-grid').classList.add('visible');
+        // 儲存登入狀態
+        localStorage.setItem('kd_loggedIn', 'true');
+        localStorage.setItem('kd_loginTime', new Date().getTime());
         
-        // 如果已登入 & 登入時間不超過 1 小時 (3600000 毫秒)
-        if (loggedIn === 'true' && loginTime && (currentTime - parseInt(loginTime)) < 3600000) {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.querySelector('.app-grid').classList.add('visible');
-        }
-    });
+        // 除錯用 - 確認功能被觸發
+        console.log('登入成功，顯示功能區塊');
+    } else {
+        document.getElementById('mainErrorMessage').textContent = '密碼錯誤，請重試';
+        document.getElementById('mainPasswordInput').value = '';
+        
+        // 震動輸入框效果
+        const input = document.getElementById('mainPasswordInput');
+        input.classList.add('shake');
+        setTimeout(() => {
+            input.classList.remove('shake');
+        }, 500);
+        
+        // 除錯用
+        console.log('密碼錯誤');
+    }
+}
 
-    // 添加震動動畫
-    const style = document.createElement('style');
-    style.innerHTML = `
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        .shake {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-        }
-    `;
-    document.head.appendChild(style);
-	    
-        function toggleSection(header) {function toggleSection（header） {
-            const content = header.nextElementSibling;
-            const chevron = header.querySelector('.chevron-icon');
-            
-            // 切換展開狀態
-            content.classList.toggle('expanded');
-            chevron.classList.toggle('expanded');
-            
-            // 更新箭頭方向
-            chevron.style.transform = content.classList.contains('expanded') 
-                ? 'rotate(180deg)' 
-                : 'rotate(0deg)';
-        }
+// 監聽 DOM 載入完成
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM 完全載入');
+    
+    // 修正 toggleSection 函數，刪除錯誤的重複宣告
+    window.toggleSection = function(header) {
+        const content = header.nextElementSibling;
+        const chevron = header.querySelector('.chevron-icon');
+        
+        // 切換展開狀態
+        content.classList.toggle('expanded');
+        chevron.classList.toggle('expanded');
+        
+        // 更新箭頭方向
+        chevron.style.transform = content.classList.contains('expanded') 
+            ? 'rotate(180deg)' 
+            : 'rotate(0deg)';
+    };
+    
+    // 添加回車鍵功能
+    const mainPasswordInput = document.getElementById('mainPasswordInput');
+    if (mainPasswordInput) {
+        mainPasswordInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                console.log('按下Enter鍵');
+                checkMainPassword();
+            }
+        });
+    }
+    
+    // 添加按鈕點擊事件
+    const loginButton = document.querySelector('.login-button');
+    if (loginButton) {
+        loginButton.addEventListener('click', function() {
+            console.log('點擊登入按鈕');
+            checkMainPassword();
+        });
+    }
+    
+    // 檢查登入狀態
+    const loggedIn = localStorage.getItem('kd_loggedIn');
+    const loginTime = localStorage.getItem('kd_loginTime');
+    const currentTime = new Date().getTime();
+    
+    // 如果已登入 & 登入時間不超過 1 小時 (3600000 毫秒)
+    if (loggedIn === 'true' && loginTime && (currentTime - parseInt(loginTime)) < 3600000) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.querySelector('.app-grid').classList.add('visible');
+        console.log('已登入狀態，自動顯示功能區塊');
+    } else {
+        console.log('未登入或登入已過期');
+    }
+    
+    // 切換到預設月份
+    if (typeof switchMonth === 'function') {
+        switchMonth('feb');
+    }
+    
+    // 添加震動動畫樣式
+    if (!document.getElementById('shake-animation')) {
+        const style = document.createElement('style');
+        style.id = 'shake-animation';
+        style.innerHTML = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+            .shake {
+                animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+});
 
+// 檢查控制台是否有顯示除錯信息
+console.log('JavaScript 已載入');
         function checkPastEvents() {
     const today = new Date();
     const currentYear = today.getFullYear();
