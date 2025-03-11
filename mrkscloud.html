@@ -1,0 +1,4273 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mr. K&D's 生活．旅程．回憶</title>
+    <meta name="theme-color" content="#ffffff">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide-react@0.263.1/dist/umd/lucide-react.min.js"></script>
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    background-color: #f7f7f7;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;  /* 添加這行 */
+}
+html {
+    overflow-x: hidden;
+}
+
+.banner, .app-grid {
+    overflow-x: hidden;
+}
+
+        /* 櫻花飄落動畫 */
+        .sakura {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #ffd7e6;
+            border-radius: 15px;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        @keyframes fall {
+            0% { transform: translate(0, -10%) rotate(0deg); }
+            100% { transform: translate(100px, 100vh) rotate(360deg); }
+        }
+
+        .banner {
+    background: linear-gradient(135deg, #FF6B6B, #9f4b98);
+    padding: 40px 20px;
+    position: sticky; /* 改為 sticky */
+    top: 0; /* 添加這行，設定固定在頂部 */
+    z-index: 100; /* 添加這行，確保 banner 在其他元素上方 */
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+        .banner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('/api/placeholder/1200/300') center/cover;
+            opacity: 0.1;
+            mix-blend-mode: overlay;
+        }
+
+        .banner h1 {
+            color: white;
+            text-align: center;
+            font-size: 2.5rem;
+            line-height: 1.3;
+            font-weight: 800;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .banner p {
+            color: rgba(255,255,255,0.9);
+            text-align: center;
+            margin: 10px 0 0;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .app-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 0 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.app-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    min-height: 140px;
+}
+
+/* 背景圖片基礎設置 */
+.app-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('https://hackmd.io/_uploads/SJN8gdFF1g.png');
+    background-size: 300% 300%; /* 將圖片大小設為卡片的3倍 */
+    opacity: 0.12;
+    transition: all 0.3s ease;
+}
+
+/* 為每個卡片設置不同的背景位置 */
+.app-card:nth-child(1)::before { background-position: 0% 0%; }
+.app-card:nth-child(2)::before { background-position: 50% 0%; }
+.app-card:nth-child(3)::before { background-position: 100% 0%; }
+.app-card:nth-child(4)::before { background-position: 0% 50%; }
+.app-card:nth-child(5)::before { background-position: 50% 50%; }
+.app-card:nth-child(6)::before { background-position: 100% 50%; }
+.app-card:nth-child(7)::before { background-position: 0% 100%; }
+.app-card:nth-child(8)::before { background-position: 50% 100%; }
+.app-card:nth-child(9)::before { background-position: 100% 100%; }
+
+/* 懸停效果 */
+.app-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.app-card:hover::before {
+    opacity: 0.2;
+}
+
+.icon-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    font-size: 24px;
+    position: relative;
+    z-index: 1;
+}
+
+.app-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-top: 6px;
+    text-align: center;
+    color: #2d3748;
+    position: relative;
+    z-index: 1;
+}
+
+.app-description {
+    color: #718096;
+    text-align: center;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    position: relative;
+    z-index: 1;
+}
+
+/* 保持原有的漸層背景色 */
+.fun-trip { background: linear-gradient(145deg, #FF6B6B, #FF8787); }
+.jp-grammar { background: linear-gradient(145deg, #4FACFE, #00F2FE); }
+.jp-quick { background: linear-gradient(145deg, #43E97B, #38F9D7); }
+.reservation { background: linear-gradient(145deg, #FDA7DF, #D980FA); }
+.memory { background: linear-gradient(145deg, #A8E063, #56AB2F); }
+.schedule { background: linear-gradient(145deg, #4A90E2, #357ABD); }
+.meet { background: linear-gradient(145deg, #00897B, #4DB6AC); }
+.planning { background: linear-gradient(145deg, #FF9F43, #FFA94D); }
+.finance { background: linear-gradient(145deg, #34D399, #10B981); }
+
+@media (max-width: 768px) {
+    .app-grid {
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .icon-wrapper {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
+    .app-name {
+        font-size: 0.85rem;
+    }
+
+    .app-description {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-grid {
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .icon-wrapper {
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
+    }
+}
+        .wave-decoration {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.2' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") repeat-x bottom;
+            opacity: 0.3;
+        }
+
+        /* 預約面板樣式 */
+        .reservation-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: #F2F2F7;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .reservation-panel.active {
+            transform: translateX(-100%);
+        }
+
+        .panel-header {
+			position: sticky;
+			top: 0; 
+z-index: 11;
+            background: linear-gradient(135deg, #FDA7DF, #D980FA);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            padding: 8px;
+            cursor: pointer;
+            margin-right: 16px;
+        }
+
+        .panel-title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .location-list {
+            padding: 20px;
+        }
+
+        .location-item {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .location-header {
+            margin-bottom: 12px;
+        }
+
+        .location-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #2d3748;
+        }
+
+        .planned-date {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+            padding: 4px 8px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .location-link {
+            color: #FDA7DF;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        /* 回憶面板樣式 */
+        .memory-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: #F2F2F7;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .memory-panel.active {
+            transform: translateX(-100%);
+        }
+
+        .password-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #F2F2F7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+
+        .password-screen.hidden {
+            display: none;
+        }
+
+        .password-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 80%;
+            max-width: 320px;
+            text-align: center;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .password-button {
+            background: linear-gradient(145deg, #FDA7DF, #D980FA);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .error-message {
+            color: #FF6B6B;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .memory-grid {
+            padding: 20px;
+            columns: 3;
+            column-gap: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .memory-grid {
+                columns: 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .memory-grid {
+                columns: 1;
+            }
+
+            .app-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .icon-wrapper {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .app-name {
+                font-size: 0.85rem;
+            }
+
+            .app-description {
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .app-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+                padding: 8px;
+            }
+
+            .icon-wrapper {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+            }
+        }
+
+        .memory-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            break-inside: avoid;
+            cursor: pointer;
+            transform: translateZ(0);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .memory-image {
+            width: 100%;
+            display: block;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .memory-image:hover {
+            opacity: 0.95;
+        }
+
+        .memory-content {
+            padding: 15px;
+        }
+
+        .memory-date {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .memory-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .memory-link-container {
+            display: flex;
+            justify-content: flex-end;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+            margin-top: 8px;
+        }
+
+        .memory-link {
+            color: #FDA7DF;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* 時間表樣式 */
+        .schedule-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: #F2F2F7;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .schedule-panel.active {
+            transform: translateX(-100%);
+        }
+
+        .schedule-tabs {
+            display: flex;
+            padding: 10px 20px;
+            gap: 10px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            border: none;
+            background: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: #4A90E2;
+            color: white;
+        }
+
+        .schedule-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .schedule-month {
+            margin: 0 0 20px 0;
+            color: #4A90E2;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .weekday-grid {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .day-item {
+            padding: 15px;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+
+        .day-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .time-blocks {
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-block {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .time-block.morning { background: #E3F2FD; }
+        .time-block.afternoon { background: #FFF3E0; }
+        .time-block.evening { background: #EDE7F6; }
+        .time-block.full { background: #E8F5E9; }
+
+        .special-times {
+            display: grid;
+            gap: 10px;
+        }
+
+        .special-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .holiday-plans {
+            display: grid;
+            gap: 10px;
+        }
+
+        .holiday-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+/* 過期的假日計畫樣式 */
+.holiday-item.past-event {
+    opacity: 0.5;
+    background: #f5f5f5;
+}
+
+/* 當天的假日計畫特殊樣式 */
+.holiday-item.current-event {
+    background: linear-gradient(135deg, #4A90E2, #357ABD);
+    color: white;
+    transform: translateX(5px);
+}
+
+.holiday-item.current-event .date,
+.holiday-item.current-event .weekday,
+.holiday-item.current-event .event {
+    color: white;
+}
+
+        .date-note {
+            margin-top: 10px;
+            padding: 8px;
+            background: #E3F2FD;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #4A90E2;
+        }
+
+        .saturday-section {
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .schedule-content {
+    display: none; /* 預設隱藏所有內容 */
+}
+        /* 學術活動整體樣式 */
+.academic-events {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* 分類標題樣式 */
+.section-title {
+    font-weight: 600;
+    color: #4A90E2;
+    margin: 24px 0 16px 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* 活動卡片樣式 */
+.academic-item {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 日期區塊樣式 */
+.academic-item .date-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.academic-item .date {
+    font-weight: 600;
+    color: #4A90E2;
+    font-size: 1.1em;
+    margin-right: 8px;
+}
+
+.academic-item .weekday {
+    color: #718096;
+    padding: 2px 8px;
+    background: #f7fafc;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+/* 內容區塊樣式 */
+.academic-item .content-section {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 12px;
+    align-items: start;
+}
+
+.academic-item .label {
+    color: #4a5568;
+    font-weight: 500;
+    font-size: 0.9em;
+}
+
+.academic-item .value {
+    color: #2d3748;
+}
+
+.academic-item .event {
+    color: #2d3748;
+    font-weight: 500;
+    font-size: 1.05em;
+    margin-bottom: 4px;
+}
+
+.academic-item .note {
+    grid-column: 1 / -1;
+    margin-top: 8px;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    color: #718096;
+    font-size: 0.9em;
+}
+
+/* 行動版適配 */
+@media (max-width: 768px) {
+    .academic-item .content-section {
+        grid-template-columns: 70px 1fr;
+        gap: 8px;
+    }
+    
+    .academic-item {
+        padding: 12px;
+    }
+
+    .section-title {
+        margin: 20px 0 12px 0;
+    }
+}
+    .academic-section {
+        margin-bottom: 20px;
+    }
+
+    .section-header {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .section-header:hover {
+        background: #f8f9fa;
+    }
+
+    .section-title-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .event-date {
+        color: #4A90E2;
+        font-weight: 600;
+    }
+
+    .event-weekday {
+        color: #718096;
+        font-size: 0.9em;
+    }
+
+    .event-title {
+        font-weight: 500;
+        color: #2d3748;
+    }
+
+    .chevron-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .chevron-icon.expanded {
+        transform: rotate(180deg);
+    }
+
+    .section-content {
+        background: white;
+        margin-top: 1px;
+        padding: 15px;
+        border-radius: 8px;
+        display: none;
+    }
+
+    .section-content.expanded {
+        display: block;
+    }
+
+    .content-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .content-label {
+        font-weight: 500;
+        color: #4a5568;
+        min-width: 70px;
+    }
+
+    .content-value {
+        color: #2d3748;
+    }
+
+    .category-title {
+        color: #4A90E2;
+        font-weight: 600;
+        margin: 24px 0 16px 0;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    .academic-section.past-event {
+    opacity: 0.5;
+}
+
+.academic-section.past-event .section-header {
+    background: #f5f5f5;
+}
+
+.academic-section.past-event .event-date {
+    color: #666;
+}
+
+/* 當天活動的特殊樣式 */
+.academic-section.current-event {
+    position: relative;
+}
+
+.academic-section.current-event .section-header {
+    background: linear-gradient(135deg, #4A90E2, #357ABD);
+    transition: transform 0.2s ease;
+}
+
+.academic-section.current-event .section-header:hover {
+    transform: translateX(5px);
+}
+
+.academic-section.current-event .event-date,
+.academic-section.current-event .event-weekday,
+.academic-section.current-event .event-title {
+    color: white;
+}
+.meet { background: linear-gradient(145deg, #00897B, #4DB6AC); }
+.app-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 0 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 768px) {
+    .app-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 8px;
+    }
+}
+.planning { background: linear-gradient(145deg, #FF9F43, #FFA94D); }
+    
+    /* 預排行程面板樣式 */
+    .planning-panel {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100%;
+    background: #F2F2F7;
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto; /* 添加這行來啟用垂直滾動 */
+}
+
+    .planning-panel.active {
+        transform: translateX(-100%);
+    }
+
+    .planning-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .planning-month {
+        color: #FF9F43;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #eee;
+    }
+
+    .planning-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+/* 過期的行程樣式 */
+.planning-item.past-event {
+    opacity: 0.5;
+    background: #f5f5f5;
+}
+
+/* 當天的行程特殊樣式 */
+.planning-item.current-event {
+    background: linear-gradient(135deg, #FF9F43, #FFA94D);
+    color: white;
+    transform: translateX(5px);
+}
+
+.planning-item.current-event .planning-date,
+.planning-item.current-event .planning-title {
+    color: white;
+}
+
+    .planning-date {
+        color: #FF9F43;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .planning-title {
+        font-size: 16px;
+        color: #2d3748;
+        font-weight: 500;
+    }
+	.sort-controls {
+    padding: 15px 20px;
+    background: white;
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.sort-btn {
+    padding: 8px 16px;
+    border: 1px solid #FDA7DF;
+    background: white;
+    color: #FDA7DF;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.sort-btn:hover {
+    background: #FDA7DF15;
+}
+
+.sort-btn.active {
+    background: #FDA7DF;
+    color: white;
+}
+/* 每日概覽面板樣式 */
+.daily-overview-panel {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100%;
+    background: #F2F2F7;
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.daily-overview-panel.active {
+    transform: translateX(-100%);
+}
+
+#dailyOverviewContent {
+    min-height: calc(100vh - 60px);
+}
+
+/* 新增日程卡片樣式 */
+.overview-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.finance { 
+    background: linear-gradient(145deg, #34D399, #10B981); 
+}
+
+/* 財務面板樣式 */
+.finance-panel {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100%;
+    background: #F2F2F7;
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.finance-panel.active {
+    transform: translateX(-100%);
+}
+
+.finance-tabs {
+	position: sticky;
+    background: white;
+    padding: 10px;
+    display: flex;
+    gap: 8px;
+    position: sticky;
+    top: 56px;
+    z-index: 10;
+    border-bottom: 1px solid #eee;
+}
+
+.finance-tab {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.finance-tab.active {
+    background: #10B981;
+    color: white;
+}
+
+.finance-header-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    background: white;
+}
+
+.finance-content {
+	margin-top: 10px;
+    padding: 15px;
+}
+
+.finance-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.finance-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #10B981;
+    margin-bottom: 16px;
+}
+
+.finance-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.finance-item {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 16px;
+    transition: all 0.3s ease;
+}
+
+.finance-item:hover {
+    transform: translateX(5px);
+    background: #f0f1f2;
+}
+
+.service-info, .card-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.service-name, .card-name {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.service-amount {
+    color: #10B981;
+    font-weight: 600;
+}
+
+.payment-date, .due-date {
+    font-size: 14px;
+    color: #718096;
+}
+
+.reminder-item {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 12px;
+    background: #fff;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border-left: 4px solid #10B981;
+}
+
+.reminder-item.urgent {
+    border-left-color: #EF4444;
+    background: #FEF2F2;
+}
+
+.reminder-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #10B981;
+    color: white;
+}
+
+.reminder-item.urgent .reminder-icon {
+    background: #EF4444;
+}
+
+.reminder-content {
+    flex: 1;
+}
+
+.reminder-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.reminder-date {
+    font-size: 12px;
+    color: #666;
+}
+
+.calendar-container {
+    background: white;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 0 4px;
+}
+
+.calendar-nav {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.calendar-month {
+    font-size: 16px;
+    font-weight: 600;
+    min-width: 100px;
+    text-align: center;
+}
+
+.calendar-nav-btn {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: #f8f9fa;
+    cursor: pointer;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    font-size: 14px;
+}
+
+.calendar-weekday {
+    text-align: center;
+    font-weight: 600;
+    color: #666;
+    padding: 4px 2px;
+    font-size: 12px;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    padding: 2px;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.calendar-day.today {
+    border: 2px solid #10B981 !important;
+    background: #F0FDF4 !important;
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1;
+    position: relative;
+}
+
+.calendar-day.today .day-number {
+    color: #10B981;
+    font-weight: bold;
+}
+
+.day-number {
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    padding: 2px 0;
+}
+
+.day-event {
+    font-size: 8px;
+    padding: 1px 2px;
+    border-radius: 3px;
+    background: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.calendar-day.has-event {
+    border-color: #10B981;
+    background: #F0FDF4;
+}
+
+.calendar-day.urgent {
+    border-color: #EF4444;
+    background: #FEF2F2;
+}
+
+/* 媒體查詢 */
+@media (min-width: 640px) {
+    .calendar-container {
+        padding: 16px;
+    }
+
+    .calendar-month {
+        font-size: 18px;
+    }
+
+    .calendar-grid {
+        gap: 4px;
+        font-size: 16px;
+    }
+
+    .calendar-weekday {
+        padding: 6px;
+        font-size: 14px;
+    }
+
+    .calendar-day {
+        padding: 4px;
+    }
+
+    .day-number {
+        font-size: 14px;
+    }
+
+    .day-event {
+        font-size: 10px;
+        padding: 2px 4px;
+    }
+}
+
+@media (min-width: 768px) {
+    .calendar-container {
+        padding: 20px;
+    }
+
+    .calendar-nav-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .calendar-month {
+        font-size: 20px;
+    }
+}
+/* 日期詳情彈出視窗樣式 */
+.calendar-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1100;
+}
+
+.calendar-modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 20px;
+    position: relative;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.modal-close:hover {
+    color: #333;
+}
+
+.event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.event-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px;
+    border-left: 4px solid;
+}
+
+.event-item.subscription {
+    border-color: #10B981;
+}
+
+.event-item.credit-card {
+    border-color: #3B82F6;
+}
+
+.event-item.annual {
+    border-color: #8B5CF6;
+}
+
+.event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.event-name {
+    font-weight: 500;
+    color: #2d3748;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.event-amount {
+    font-weight: 600;
+    color: #059669;
+}
+
+.event-icon {
+    font-size: 16px;
+}
+
+.event-details {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.no-events {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 14px;
+}
+.banner {
+    background: linear-gradient(135deg, #FF6B6B, #9f4b98);
+    padding: 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow: hidden;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.banner-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0 1rem;
+}
+
+.mascot-container {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.mascot-image {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+/* 添加點擊動畫關鍵幀 */
+@keyframes mascotClick {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.8) rotate(10deg); }
+    75% { transform: scale(1.1) rotate(-5deg); }
+    100% { transform: scale(1) rotate(0); }
+}
+
+/* 懸停效果 */
+.mascot-image:hover {
+    transform: scale(1.05);
+}
+
+/* 點擊效果 */
+.mascot-image:active {
+    animation: mascotClick 0.5s ease;
+    filter: brightness(1.1);
+}
+
+/* 添加媒體查詢以保持響應式設計 */
+@media (max-width: 768px) {
+    .mascot-image {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .mascot-image {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+.title-container {
+    flex-grow: 1;
+    text-align: left;
+    min-width: 0; /* 防止文字溢出 */
+}
+
+.title-container h1 {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    line-height: 1.2;
+    white-space: nowrap; /* 保持單行 */
+}
+
+.title-container p {
+    color: rgba(255,255,255,0.9);
+    font-size: 1.1rem;
+    margin: 0.5rem 0 0;
+    white-space: nowrap; /* 保持單行 */
+}
+
+@media (max-width: 768px) {
+    .banner-content {
+        gap: 1rem;
+    }
+    
+    .mascot-image {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .title-container h1 {
+        font-size: 2rem;
+    }
+    
+    .title-container p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .banner {
+        padding: 1rem;
+    }
+    
+    .mascot-image {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .title-container h1 {
+        font-size: 1.5rem;
+    }
+    
+    .title-container p {
+        font-size: 0.9rem;
+    }
+}
+    </style>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.js"></script>
+</head>
+<body>
+    <div class="banner">
+    <div class="wave-decoration"></div>
+    <div class="banner-content">
+        <!-- 左側大圖 -->
+        <div class="mascot-container">
+            <img src="https://hackmd.io/_uploads/SJN8gdFF1g.png" alt="Working Hamster" class="mascot-image">
+        </div>
+        <!-- 右側標題 -->
+        <div class="title-container">
+            <h1>Mr. K&D's</h1>
+            <p>生活．旅程．回憶</p>
+        </div>
+    </div>
+</div>
+
+    <div class="app-grid">
+    <a href="https://sites.google.com/view/kdtrip-to-jp-2025/%E9%A6%96%E9%A0%81" class="app-card" target="_blank" rel="noopener noreferrer">
+        <div class="icon-wrapper fun-trip">🌍</div>
+        <div class="app-name">K&D趣旅遊</div>
+        <div class="app-description">探索精彩旅程</div>
+    </a>
+    
+    <a href="https://sites.google.com/view/practice-japanese/%E9%A6%96%E9%A0%81" class="app-card" target="_blank" rel="noopener noreferrer">
+        <div class="icon-wrapper jp-grammar">📚</div>
+        <div class="app-name">日語句型</div>
+        <div class="app-description">掌握日語精髓</div>
+    </a>
+    
+    <a href="https://sites.google.com/view/mrknd-in-japan/%E9%A6%96%E9%A0%81" class="app-card" target="_blank" rel="noopener noreferrer">
+        <div class="icon-wrapper jp-quick">🎯</div>
+        <div class="app-name">日語通</div>
+        <div class="app-description">快速上手日語</div>
+    </a>
+
+    <div class="app-card" onclick="toggleReservation()">
+        <div class="icon-wrapper reservation">📅</div>
+        <div class="app-name">準備預約</div>
+        <div class="app-description">安排完美行程</div>
+    </div>
+
+    <div class="app-card" onclick="toggleMemory()">
+        <div class="icon-wrapper memory">📸</div>
+        <div class="app-name">旅途回憶</div>
+        <div class="app-description">珍貴時刻紀錄</div>
+    </div>
+
+    <div class="app-card" onclick="toggleSchedule()">
+        <div class="icon-wrapper schedule">⏰</div>
+        <div class="app-name">柯先生の時</div>
+        <div class="app-description">時間安排一覽</div>
+    </div>
+
+    <a href="https://meet.google.com/ada-abre-kbe" class="app-card" target="_blank" rel="noopener noreferrer">
+        <div class="icon-wrapper meet">💻</div>
+        <div class="app-name">空中有約</div>
+        <div class="app-description">即時線上交流</div>
+    </a>
+
+    <div class="app-card" onclick="togglePlanning()">
+        <div class="icon-wrapper planning">📋</div>
+        <div class="app-name">預排行程</div>
+        <div class="app-description">未來活動安排</div>
+    </div>
+
+    <div class="app-card" onclick="toggleFinance()">
+        <div class="icon-wrapper finance">💰</div>
+        <div class="app-name">柯先生の財</div>
+        <div class="app-description">訂閱與帳單</div>
+    </div>
+</div>
+
+<!-- 添加預排行程面板 -->
+<div class="planning-panel" id="planningPanel">
+    <div class="panel-header">
+        <button class="back-btn" onclick="closePlanning()">←</button>
+        <div class="panel-title">預排行程</div>
+    </div>
+    
+
+
+    <div class="planning-card">
+        <div class="planning-month">2025年3月</div>
+        <div class="planning-item">
+            <div class="planning-date">3月5日(三) - 3月10日(一)</div>
+            <div class="planning-title">札幌東京遊</div>
+        </div>
+    </div>
+
+	<div class="planning-card">
+        <div class="planning-month">2025年4月</div>
+        <div class="planning-item">
+            <div class="planning-date">4月7日(一)</div>
+            <div class="planning-title">柯先生 回診皮膚科</div>
+        </div>
+    </div>
+
+    <div class="planning-card">
+        <div class="planning-month">2025年4月</div>
+        <div class="planning-item">
+            <div class="planning-date">4月26日(六) - 27日(日)</div>
+            <div class="planning-title">柯先生 骨重生六門派論劍中台灣 研討會</div>
+        </div>
+    </div>
+
+
+    <div class="planning-card">
+        <div class="planning-month">2025年8月</div>
+        <div class="planning-item">
+            <div class="planning-date">8月2日(六) - 8月4日(一)</div>
+            <div class="planning-title">美學加減法課程</div>
+            <div class="planning-location">
+                <span class="location-icon">📍</span>
+                <span class="location-text">台中微視野顯微教育中心（台中市烏日區高鐵五路156號12樓）</span>
+            </div>
+        </div>
+        <div class="planning-item">
+            <div class="planning-date">8月17日(日)</div>
+            <div class="planning-title">中台灣經典植牙基礎班</div>
+            <div class="planning-time">09:00-17:00</div>
+            <div class="planning-location">
+                <span class="location-icon">📍</span>
+                <span class="location-text">仲信金鬱金香酒店（台中市北屯區后庄路306號）</span>
+            </div>
+        </div>
+        <div class="planning-item">
+            <div class="planning-date">8月24日(日)</div>
+            <div class="planning-title">中台灣經典植牙基礎班</div>
+            <div class="planning-time">09:00-17:00</div>
+            <div class="planning-location">
+                <span class="location-icon">📍</span>
+                <span class="location-text">上午：謙和牙醫診所（台中市北區英才路394號）</span>
+                <br/>
+                <span class="location-icon">📍</span>
+                <span class="location-text">下午：金典酒店（台中市西區健行路1049號）</span>
+            </div>
+        </div>
+        <div class="planning-item">
+            <div class="planning-date">8月31日(日)</div>
+            <div class="planning-title">中台灣經典植牙基礎班</div>
+            <div class="planning-time">09:00-17:00</div>
+            <div class="planning-location">
+                <span class="location-icon">📍</span>
+                <span class="location-text">仲信金鬱金香酒店（台中市北屯區后庄路306號）</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="planning-card">
+        <div class="planning-month">2025年9月</div>
+        <div class="planning-item">
+            <div class="planning-date">9月7日(日)</div>
+            <div class="planning-title">中台灣經典植牙基礎班</div>
+            <div class="planning-time">09:00-17:00</div>
+            <div class="planning-location">
+                <span class="location-icon">📍</span>
+                <span class="location-text">仲信金鬱金香酒店（台中市北屯區后庄路306號）</span>
+            </div>
+        </div>
+        <div class="planning-item">
+            <div class="planning-date">9月14日(日)</div>
+            <div class="planning-title">中台灣經典植牙基礎班</div>
+            <div class="planning-time">09:00-17:00</div>
+            <div class="planning-location">
+                <span class="location-icon">📍</span>
+                <span class="location-text">仲信金鬱金香酒店（台中市北屯區后庄路306號）</span>
+            </div>
+        </div>
+        <div class="planning-item">
+            <div class="planning-date">9月21日(日)</div>
+            <div class="planning-title">中台灣經典植牙基礎班</div>
+            <div class="planning-time">09:00-17:00</div>
+            <div class="planning-location">
+                <span class="location-icon">📍</span>
+                <span class="location-text">仲信金鬱金香酒店（台中市北屯區后庄路306號）</span>
+            </div>
+        </div>
+        <div class="planning-item">
+            <div class="planning-date">9月28日(日)</div>
+            <div class="planning-title">中台灣經典植牙基礎班</div>
+            <div class="planning-time">09:00-17:00</div>
+            <div class="planning-location">
+                <span class="location-icon">📍</span>
+                <span class="location-text">仲信金鬱金香酒店（台中市北屯區后庄路306號）</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- 預約面板 -->
+    <div class="reservation-panel" id="reservationPanel">
+        <div class="panel-header">
+            <button class="back-btn" onclick="closeReservation()">←</button>
+            <div class="panel-title">溫泉預約</div>
+        </div>
+        <div class="location-list">
+            <div class="location-item">
+                <div class="location-header">
+                    <div class="location-name">北海道岩見沢温泉</div>
+                    <div class="planned-date">預計預約日期：2025年2月5日 (週三)</div>
+                </div>
+                <a href="https://yudokoro-honoka.jp/iwamizawa/family/" class="location-link" target="_blank">
+                    查看詳情 →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 回憶面板 -->
+    <div class="memory-panel" id="memoryPanel">
+    <div class="panel-header">
+        <button class="back-btn" onclick="closeMemory()">←</button>
+        <div class="panel-title">旅途回憶</div>
+    </div>
+
+    <!-- 密碼輸入畫面 -->
+    <div class="password-screen" id="passwordScreen">
+        <div class="password-box">
+            <h2>請輸入密碼</h2>
+            <input 
+                type="password" 
+                id="passwordInput" 
+                class="password-input" 
+                placeholder="請輸入密碼"
+                autocomplete="current-password"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                maxlength="4"
+            >
+            <button onclick="checkPassword()" class="password-button">解鎖相簿</button>
+            <div id="errorMessage" class="error-message"></div>
+        </div>
+    </div>
+
+
+    <!-- 排序控制區 -->
+    <div class="sort-controls">
+        <button class="sort-btn active" onclick="renderMemories('desc')">由新到舊</button>
+        <button class="sort-btn" onclick="renderMemories('asc')">由舊到新</button>
+    </div>
+
+    <!-- 相簿內容 -->
+    <div class="memory-grid">
+        <!-- 相簿內容將由 JavaScript 動態生成 -->
+    </div>
+</div>
+
+    <!-- 新增每日概覽面板 -->
+<div class="daily-overview-panel" id="dailyOverviewPanel">
+    <div class="panel-header">
+        <button class="back-btn" onclick="closeDailyOverview()">←</button>
+        <div class="panel-title">今日概覽</div>
+    </div>
+    <div id="dailyOverviewContent"></div>
+</div>
+
+<!-- 財務面板 -->
+<div class="finance-panel" id="financePanel">
+    <div class="panel-header">
+    <button class="back-btn" onclick="closeFinance()">←</button>
+    <div class="panel-title">財務管理</div>
+    <button 
+       onclick="showTrackingPassword()"
+       class="tracking-btn"
+       style="
+           background: linear-gradient(145deg, #34D399, #10B981);
+           color: white;
+           padding: 6px 12px;
+           border-radius: 20px;
+           text-decoration: none;
+           font-size: 14px;
+           display: flex;
+           align-items: center;
+           gap: 4px;
+           border: none;
+           cursor: pointer;
+           transition: opacity 0.3s;
+           margin-left: auto;
+       "
+       onmouseover="this.style.opacity='0.9'"
+       onmouseout="this.style.opacity='1'"
+    >
+        <span style="font-size: 16px;">📝</span>
+        記帳去
+    </button>
+</div>
+
+<!-- 添加密碼驗證面板 -->
+<div id="trackingPasswordScreen" class="password-screen hidden" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+">
+    <div class="password-box" style="
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        width: 80%;
+        max-width: 320px;
+        text-align: center;
+    ">
+        <h2 style="margin-bottom: 20px;">請輸入密碼</h2>
+        <input 
+    type="password" 
+    id="trackingPasswordInput" 
+    class="password-input" 
+    placeholder="請輸入密碼"
+    autocomplete="current-password"
+    inputmode="numeric"
+    pattern="[0-9]*"
+    maxlength="4"
+>
+        <button 
+            onclick="checkTrackingPassword()" 
+            style="
+                background: linear-gradient(145deg, #34D399, #10B981);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 16px;
+                cursor: pointer;
+                width: 100%;
+                margin-top: 10px;
+            "
+        >
+            確認
+        </button>
+        <button 
+            onclick="closeTrackingPassword()" 
+            style="
+                background: none;
+                border: none;
+                color: #666;
+                padding: 12px;
+                margin-top: 10px;
+                cursor: pointer;
+                width: 100%;
+                font-size: 14px;
+            "
+        >
+            取消
+        </button>
+        <div id="trackingErrorMessage" style="
+            color: #FF6B6B;
+            margin-top: 10px;
+            font-size: 14px;
+        "></div>
+    </div>
+</div>
+
+    <div class="finance-tabs">
+        <button class="finance-tab active" onclick="switchFinanceTab('calendar')">
+            <span class="tab-icon">📅</span>
+            日曆視圖
+        </button>
+        <button class="finance-tab" onclick="switchFinanceTab('list')">
+            <span class="tab-icon">📋</span>
+            列表視圖
+        </button>
+    </div>
+
+    <div class="finance-content">
+        <!-- 日曆視圖 -->
+        <div id="financeCalendarView" class="view-content">
+            <!-- 提醒區域 -->
+            <div class="reminders-section">
+                <!-- 提醒內容將由 JavaScript 動態生成 -->
+            </div>
+
+            <!-- 日曆區域 -->
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <div class="calendar-nav">
+                        <button class="calendar-nav-btn" onclick="prevMonth()">←</button>
+                        <h3 class="calendar-month">2025年2月</h3>
+                        <button class="calendar-nav-btn" onclick="nextMonth()">→</button>
+                    </div>
+                </div>
+                <div class="calendar-grid">
+                    <!-- 日曆內容將由 JavaScript 動態生成 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 列表視圖 -->
+        <div id="financeListView" class="view-content" style="display: none;">
+            <div class="finance-card subscription">
+                <h3 class="finance-section-title">
+                    <span class="icon">📱</span>
+                    每月訂閱服務
+                </h3>
+                <div class="finance-items">
+                    <div class="finance-item">
+                        <div class="service-info">
+                            <div class="service-name">Apple 雲端</div>
+                            <div class="service-amount">NT$ 90</div>
+                        </div>
+                        <div class="payment-date">每月 21 日</div>
+                    </div>
+                    <div class="finance-item">
+                        <div class="service-info">
+                            <div class="service-name">YouTube Premium</div>
+                            <div class="service-amount">NT$ 119</div>
+                        </div>
+                        <div class="payment-date">每月 19 日</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="finance-card annual">
+                <h3 class="finance-section-title">
+                    <span class="icon">📅</span>
+                    年度訂閱
+                </h3>
+                <div class="finance-items">
+                    <div class="finance-item">
+                        <div class="service-info">
+                            <div class="service-name">Google One</div>
+                            <div class="service-amount">NT$ 650/年</div>
+                        </div>
+                        <div class="payment-date">下次續約：2025/12/25</div>
+                    </div>
+                    <div class="finance-item">
+                        <div class="service-info">
+                            <div class="service-name">Netflix</div>
+                            <div class="service-amount">NT$ 2,640/年</div>
+                        </div>
+                        <div class="payment-date">下次續約：2026/02/01</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="finance-card credit-cards">
+                <h3 class="finance-section-title">
+                    <span class="icon">💳</span>
+                    信用卡結帳日
+                </h3>
+                	<div class="finance-items">
+                    <div class="finance-item">
+                        <div class="card-info">
+                            <div class="card-name">玉山</div>
+                            <div class="due-date">每月 6 日</div>
+                        </div>
+                    </div>
+<div class="finance-items">
+                    <div class="finance-item">
+                        <div class="card-info">
+                            <div class="card-name">國泰世華</div>
+                            <div class="due-date">每月 10 日</div>
+                        </div>
+                    </div>
+                    <div class="finance-item">
+                        <div class="card-info">
+                            <div class="card-name">聯邦</div>
+                            <div class="due-date">每月 12 日</div>
+                        </div>
+                    </div>
+                    <div class="finance-item">
+                        <div class="card-info">
+                            <div class="card-name">台新</div>
+                            <div class="due-date">每月 17 日</div>
+                        </div>
+                    </div>
+                    <div class="finance-item">
+                        <div class="card-info">
+                            <div class="card-name">永豐</div>
+                            <div class="due-date">每月 19 日</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- 時間表面板 -->
+<div class="schedule-panel" id="schedulePanel">
+    <div class="panel-header">
+        <button class="back-btn" onclick="closeSchedule()">←</button>
+        <div class="panel-title">柯先生の時間表</div>
+    </div>
+    
+    <div class="schedule-tabs">
+    <button id="march-tab" class="tab-btn" onclick="switchMonth('mar')">2025年3月</button>
+	    <button id="april-tab" class="tab-btn active" onclick="switchMonth('feb')">2025年4月</button>
+
+</div>
+
+    <div id="janSchedule" class="schedule-content">
+    <!-- 固定時段卡片 -->
+<div class="schedule-card">
+    <h3 class="schedule-month">2025年3月 固定時段</h3>
+    <div class="schedule-grid">
+        <div class="weekday-grid">
+            <div class="day-item">
+                <div class="day-name">週一</div>
+                <div class="time-blocks">
+                    <div class="time-block morning">
+                        <span class="time-icon">🌅</span>
+                        <span class="time-text">早上</span>
+                    </div>
+                    <div class="time-block afternoon">
+                        <span class="time-icon">🌇</span>
+                        <span class="time-text">下午</span>
+                    </div>
+                </div>
+            </div>
+            <div class="day-item">
+                <div class="day-name">週二</div>
+                <div class="time-blocks">
+                    <div class="time-block morning">
+                        <span class="time-icon">🌅</span>
+                        <span class="time-text">早上</span>
+                    </div>
+                    <div class="time-block afternoon">
+                        <span class="time-icon">🌇</span>
+                        <span class="time-text">下午</span>
+                    </div>
+                </div>
+            </div>
+            <div class="day-item">
+                <div class="day-name">週三、四</div>
+                <div class="time-blocks">
+                    <div class="time-block afternoon">
+                        <span class="time-icon">🌇</span>
+                        <span class="time-text">下午</span>
+                    </div>
+                    <div class="time-block evening">
+                        <span class="time-icon">🌙</span>
+                        <span class="time-text">晚上</span>
+                    </div>
+                </div>
+            </div>
+            <div class="day-item">
+                <div class="day-name">週五</div>
+                <div class="time-blocks">
+                    <div class="time-block morning">
+                        <span class="time-icon">🌅</span>
+                        <span class="time-text">早上</span>
+                    </div>
+                    <div class="time-block evening">
+                        <span class="time-icon">🌙</span>
+                        <span class="time-text">晚上</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="saturday-section">
+            <div class="day-item">
+                <div class="day-name">
+                    指定週六
+                    <span class="info-icon">ℹ️</span>
+                </div>
+                <div class="time-blocks">
+                    <div class="time-block morning">
+                        <span class="time-icon">🌅</span>
+                        <span class="time-text">早上</span>
+                    </div>
+                    <div class="time-block afternoon">
+                        <span class="time-icon">🌇</span>
+                        <span class="time-text">下午</span>
+                    </div>
+                </div>
+                <div class="date-note">
+                    本月：3/1、3/22、3/29
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 特殊時段卡片 -->
+<div class="schedule-card special">
+    <h3 class="schedule-month">
+        <span class="alert-icon">⚠️</span>
+        特殊時段
+    </h3>
+    <div class="special-times">
+        <div class="special-item">
+            <span class="date">3/5</span>
+            <span class="weekday">(三)</span>
+            <div class="time-block full">
+                <span class="time-icon">⏰</span>
+                <span class="time-text">休診</span>
+            </div>
+        </div>
+        <div class="special-item">
+            <span class="date">3/6</span>
+            <span class="weekday">(四)</span>
+            <div class="time-block full">
+                <span class="time-icon">⏰</span>
+                <span class="time-text">休診</span>
+            </div>
+        </div>
+        <div class="special-item">
+            <span class="date">3/7</span>
+            <span class="weekday">(五)</span>
+            <div class="time-block full">
+                <span class="time-icon">⏰</span>
+                <span class="time-text">休診</span>
+            </div>
+        </div>
+        <div class="special-item">
+            <span class="date">3/8</span>
+            <span class="weekday">(六)</span>
+            <div class="time-block full">
+                <span class="time-icon">⏰</span>
+                <span class="time-text">休診</span>
+            </div>
+        </div>
+        <div class="special-item">
+            <span class="date">3/9</span>
+            <span class="weekday">(日)</span>
+            <div class="time-block full">
+                <span class="time-icon">⏰</span>
+                <span class="time-text">休診</span>
+            </div>
+        </div>
+        <div class="special-item">
+            <span class="date">3/10</span>
+            <span class="weekday">(一)</span>
+            <div class="time-block full">
+                <span class="time-icon">⏰</span>
+                <span class="time-text">休診</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- 學術活動卡片 -->
+<div class="schedule-card academic">
+    <h3 class="schedule-month">
+        <span class="book-icon">📚</span>
+        3月學術活動
+    </h3>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">3/3</div>
+                <div class="event-weekday">(一)</div>
+                <div class="event-title">院區會議</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">牙科2樓候診室</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">3/5</div>
+                <div class="event-weekday">(三)</div>
+                <div class="event-title">Endo Journal</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">王逸晴</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">張文信</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">3/12</div>
+                <div class="event-weekday">(三)</div>
+                <div class="event-title">牙科大會</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">余明元</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部2樓</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">3/14</div>
+                <div class="event-weekday">(五)</div>
+                <div class="event-title">全人牙科治療講座 Combine meeting</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">陳柔芩、陳冠偉</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">3/18</div>
+                <div class="event-weekday">(二)</div>
+                <div class="event-title">Pedo CC</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">賴嘉禾、蔡欣庭</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">余明元、林軒竹</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+<div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">3/19</div>
+                <div class="event-weekday">(三)</div>
+                <div class="event-title">Pedo Seminar: Pulpal Treatment of Primary Teeth</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">劉洧丞</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">蘇若梅、林軒竹</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">3/21</div>
+                <div class="event-weekday">(五)</div>
+                <div class="event-title">Perio C.C & Implant Lecture</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">韓均妮、張嘉真</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">朱耕廷</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">3/24</div>
+                <div class="event-weekday">(一)</div>
+                <div class="event-title">全人牙科治療講座 Prostho CC</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">李宜芳</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">吳成才</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">3/25</div>
+                <div class="event-weekday">(二)</div>
+                <div class="event-title">Pedo Journal </div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">柯柏銘</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">林軒竹</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">3/26</div>
+                <div class="event-weekday">(三)</div>
+                <div class="event-title">Endo Seminar: (2016) Restoration of Root Canal-Treated Teeth - An Adhesive Dentistry Perspective, Jorge Perdigão Chapter 1,2,3</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">李學鴻</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">廖國翰</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">3/31</div>
+                <div class="event-weekday">(一)</div>
+                <div class="event-title">家庭牙科讀書會: Esthetic Dentistry (chapter16-1)</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">蔡君瑋</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">陳冠偉</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- 假日計畫卡片 -->
+<div class="schedule-card holiday">
+    <h3 class="schedule-month">3月假日計畫</h3>
+    <div class="holiday-plans">
+        <div class="holiday-item">
+            <span class="calendar-icon">📅</span>
+            <span class="date">3/15-3/16</span>
+            <span class="weekday">(六-日)</span>
+            <span class="event">丹先生生日</span>
+            <div class="accommodation-info">
+                <div class="stay-period">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+   <div id="febSchedule" class="schedule-content">
+        <div class="schedule-card">
+            <h3 class="schedule-month">2025年4月 固定時段</h3>
+            <div class="schedule-grid">
+                <div class="weekday-grid">
+                    <div class="day-item">
+                        <div class="day-name">週一</div>
+                        <div class="time-blocks">
+                            <div class="time-block morning">
+                                <span class="time-icon">🌅</span>
+                                <span class="time-text">早上</span>
+                            </div>
+                            <div class="time-block afternoon">
+                                <span class="time-icon">🌇</span>
+                                <span class="time-text">下午</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="day-item">
+                        <div class="day-name">週二</div>
+                        <div class="time-blocks">
+                            <div class="time-block morning">
+                                <span class="time-icon">🌅</span>
+                                <span class="time-text">早上</span>
+                            </div>
+                            <div class="time-block afternoon">
+                                <span class="time-icon">🌇</span>
+                                <span class="time-text">下午</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="day-item">
+                        <div class="day-name">週三、四</div>
+                        <div class="time-blocks">
+                            <div class="time-block afternoon">
+                                <span class="time-icon">🌇</span>
+                                <span class="time-text">下午 (跟診)</span>
+                            </div>
+                            <div class="time-block evening">
+                                <span class="time-icon">🌙</span>
+                                <span class="time-text">晚上</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="day-item">
+                        <div class="day-name">週五</div>
+                        <div class="time-blocks">
+                            <div class="time-block morning">
+                                <span class="time-icon">🌅</span>
+                                <span class="time-text">早上</span>
+                            </div>
+                            <div class="time-block evening">
+                                <span class="time-icon">🌙</span>
+                                <span class="time-text">晚上(關門留守)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="saturday-section">
+                    <div class="day-item">
+                        <div class="day-name">
+                            指定週六
+                            <span class="info-icon">ℹ️</span>
+                        </div>
+                        <div class="time-blocks">
+                            <div class="time-block morning">
+                                <span class="time-icon">🌅</span>
+                                <span class="time-text">早上</span>
+                            </div>
+                            <div class="time-block afternoon">
+                                <span class="time-icon">🌇</span>
+                                <span class="time-text">下午</span>
+                            </div>
+                        </div>
+                        <div class="date-note">
+                            本月： 4/12、4/19
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 特殊時段卡片 -->
+        <div class="schedule-card special">
+            <h3 class="schedule-month">
+                <span class="alert-icon">⚠️</span>
+                特殊時段
+            </h3>
+            <div class="special-times">
+                <div class="special-item">
+                    <span class="date">4/1</span>
+                    <span class="weekday">(二)</span>
+                    <div class="time-block full">
+                        <span class="time-icon">⏰</span>
+                        <span class="time-text">下午、晚上</span>
+                    </div>
+                </div>
+                <div class="special-item">
+                    <span class="date">4/4</span>
+                    <span class="weekday">(五)</span>
+                    <div class="time-block full">
+                        <span class="time-icon">⏰</span>
+                        <span class="time-text">全日休診</span>
+                    </div>
+                </div>
+                <div class="special-item">
+                    <span class="date">4/23</span>
+                    <span class="weekday">(三)</span>
+                    <div class="time-block full">
+                        <span class="time-icon">⏰</span>
+                        <span class="time-text">早上、下午衛教</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+		<!-- 學術活動卡片 -->
+<div class="schedule-card academic">
+    <h3 class="schedule-month">
+        <span class="book-icon">📚</span>
+        4月學術活動
+    </h3>
+
+<div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">4/9</div>
+                <div class="event-weekday">(三)</div>
+                <div class="event-title">全人牙科治療講座 Prostho CC</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">陳柔岑</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">陳冠偉</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">4/15</div>
+                <div class="event-weekday">(二)</div>
+                <div class="event-title">全人牙科治療講座 Combine meeting</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">陳柔岑</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">4/16</div>
+                <div class="event-weekday">(三)</div>
+                <div class="event-title">Endo Journal</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">李學鴻</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">張文信</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">4/18</div>
+                <div class="event-weekday">(五)</div>
+                <div class="event-title">Perio C.C & Implant Lecture</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">王逸晴&劉德豐</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">朱耕廷</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">4/22</div>
+                <div class="event-weekday">(二)</div>
+                <div class="event-title">Pedo Journal</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">韓均妮</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">林軒竹</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">4/23</div>
+                <div class="event-weekday">(三)</div>
+                <div class="event-title">Pedo Seminar: The Problem of Pain and Sedation</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">李宜芳</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">蘇若梅</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">4/29</div>
+                <div class="event-weekday">(二)</div>
+                <div class="event-title">家庭牙科讀書會: Esthetic Dentistry (chapter16-2)</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">賴嘉荷</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">陳冠偉</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="academic-section">
+        <div class="section-header" onclick="toggleSection(this)">
+            <div class="section-title-row">
+                <div class="event-date">4/30</div>
+                <div class="event-weekday">(三)</div>
+                <div class="event-title">Endo Seminar: (2016) Restoration of Root Canal-Treated Teeth - An Adhesive Dentistry Perspective, Jorge Perdigão Chapter 4, 5, 6</div>
+            </div>
+            <div class="chevron-icon">▼</div>
+        </div>
+        <div class="section-content">
+            <div class="content-row">
+                <div class="content-label">報告人：</div>
+                <div class="content-value">蔡欣庭</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">主持人：</div>
+                <div class="content-value">廖國翰</div>
+            </div>
+            <div class="content-row">
+                <div class="content-label">地點：</div>
+                <div class="content-value">本部五樓會議室</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <!-- 假日計畫卡片 -->
+        <div class="schedule-card holiday">
+            <h3 class="schedule-month">4月假日計畫</h3>
+            <div class="holiday-plans">
+                <div class="holiday-item">
+                    <span class="calendar-icon">📅</span>
+                    <span class="date">4/26-27</span>
+                    <span class="weekday">(六-日)</span>
+                    <span class="event">骨重生六門派論劍中台灣 研討會</span>
+                    <div class="accommodation-info">
+                        <div class="hotel-name">
+                            <span class="hotel-icon">🏫</span>
+                            <span class="hotel-text">台中榮民總醫院</span>
+                        </div>
+                        <div class="hotel-address">
+                            <span class="address-icon">📍</span>
+                            <span class="address-text">台中市西屯區臺灣大道四段1650號</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>       
+
+
+    <script>
+        // 相簿資料
+        const memories = [
+            {
+                date: 'August 16-17, 2024',
+                title: '柯先生與丹先生@彰化',
+                image: 'https://hackmd.io/_uploads/Skrk5PHVyg.jpg',
+                link: 'https://photos.app.goo.gl/2qaRW8vE5PiVrZJV8'
+            },
+            {
+                date: 'August 24, 2024',
+                title: "Mr. K&D's Dating in downtown Taichung",
+                image: 'https://hackmd.io/_uploads/ByqJ9wBVyl.jpg',
+                link: 'https://photos.app.goo.gl/dCTFCFzbfkBhe1c49'
+            },
+            {
+                date: 'September 7, 2024',
+                title: "Mr. K&D's Dating in Taipei",
+                image: 'https://hackmd.io/_uploads/SksV0vB4Je.jpg',
+                link: 'https://photos.app.goo.gl/2yjtTmoJjgC2kkws8'
+            },
+            {
+                date: 'September 15, 2024',
+                title: 'Mr. K&D in Downtown Chiayi',
+                image: 'https://hackmd.io/_uploads/H1kx9vSEyg.jpg',
+                link: 'https://photos.app.goo.gl/2Z3B5FUCByvoLdKb8'
+            },
+            {
+                date: 'September 28, 2024',
+                title: 'Mr. K&D 鶯歌散步喝茶趣',
+                image: 'https://hackmd.io/_uploads/SJde9PB4yx.jpg',
+                link: 'https://photos.app.goo.gl/dShrVqGme3VX8BZr8'
+            },
+            {
+                date: 'October 5, 2024',
+                title: "Mr. K&D 彰化台中的完美三餐生活",
+                image: 'https://hackmd.io/_uploads/Bk2x9DHVye.jpg',
+                link: 'https://photos.app.goo.gl/q71tZdgD9DSZNf9n6'
+            },
+            {
+                date: 'October 9-10, 2024',
+                title: "Mr. K&D's 國慶府城遊",
+                image: 'https://hackmd.io/_uploads/BJxW9PBVkl.jpg',
+                link: 'https://photos.app.goo.gl/PiRBh43jTk2BNVpb8'
+            },
+            {
+                date: 'October 19-20, 2024',
+                title: "Mr. K&D's 桃園台北知性篇",
+                image: 'https://hackmd.io/_uploads/BJhZcwr4Jl.jpg',
+                link: 'https://photos.app.goo.gl/Xq1LnyGcZgMfSQou9'
+            },
+            {
+                date: 'November 9, 2024',
+                title: "Teresa's 粉絲見面會",
+                image: 'https://hackmd.io/_uploads/HJgGcvSEye.jpg',
+                link: 'https://photos.app.goo.gl/Jxg5tnqgtJiKMQm6A'
+            },
+            {
+                date: 'November 9-10, 2024',
+                title: "Mr. K&D's Romantic Gathering in Taichung",
+                image: 'https://hackmd.io/_uploads/rkQzqPB41l.jpg',
+                link: 'https://photos.app.goo.gl/c2Hb6aWcxPe9XkM26'
+            },
+            {
+                date: 'November 23-24, 2024',
+                title: "Mr. K&D's 高雄臺南遊",
+                image: 'https://hackmd.io/_uploads/BJUG9vHE1g.jpg',
+                link: 'https://photos.app.goo.gl/Psc6W6GVU9toeEWr9'
+            },
+            {
+        date: 'December 7-8, 2024',
+        title: "Mr. K&D's Shopping Discovery",
+        image: 'https://hackmd.io/_uploads/rkKMcPSEyg.jpg',
+        link: 'https://photos.app.goo.gl/4UFa9MuRboPkD5xc7'
+    },
+    {
+        date: 'December 15, 2024',
+        title: "Mr. K&D's Dating at Songshan Cultural and Creative Park",
+        image: 'https://hackmd.io/_uploads/SJeg_ogpE1e.jpg',
+        link: 'https://photos.app.goo.gl/5HyfFHKS2Mvg1Eoh6'  
+    },
+	{
+        date: 'December 20, 2024',
+        title: "Mr. K&D's Yilan Capybara",
+        image: 'https://hackmd.io/_uploads/S1VQj48Bkx.png',
+        link: 'https://photos.app.goo.gl/CvphY9jGcG8HK2b66'  
+    },
+	{
+        date: 'December 31, 2024-2025',
+        title: "Mr.K&D 跨年趣",
+        image: 'https://hackmd.io/_uploads/SkXsjDXIkl.png',
+        link: 'https://photos.app.goo.gl/EULaNXDsA9LKqzxz6'  
+    },
+	{
+        date: 'January 11, 2025',
+        title: " Mr. K&D 桃園市區泡茶趣",
+        image: 'https://hackmd.io/_uploads/BkdYWkfDke.png',
+        link: 'https://photos.app.goo.gl/DME53iaRB3sZGYR46'  
+    },
+	{
+        date: 'January 19, 2025',
+        title: " Mr. K&D 台中國美館&耕讀園泡茶趣",
+        image: 'https://hackmd.io/_uploads/HJm5ymjwkl.png',
+        link: 'https://photos.app.goo.gl/4rv1cLGznKQDs2Zv9'  
+    },
+	{
+        date: 'January 25, 2025',
+        title: "Mr. K&D 桃園深度遊之草莓、奧爾森、大溪",
+        image: 'https://hackmd.io/_uploads/HJvASvE_yl.jpg',
+        link: 'https://photos.app.goo.gl/ptXqwwuANrEnJu6E6'  
+    }, 
+	{
+        date: 'February 9, 2025',
+        title: "Mr.K&D’s Pizza & Tea in Taichung",
+        image: 'https://hackmd.io/_uploads/HJTx2yPt1x.png',
+        link: 'https://photos.app.goo.gl/ZqnJCnmUc9wPBdw28'  
+    },
+	{
+        date: 'February 14, 2025',
+        title: "Mr.K&D’s 情人節印度料理&九份遊",
+        image: 'https://hackmd.io/_uploads/ry0uIfg9Jl.png',
+        link: 'https://photos.app.goo.gl/9Kd5Jvo3RbEzabNr8'  
+    }
+
+        ];	
+
+
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const chevron = header.querySelector('.chevron-icon');
+            
+            // 切換展開狀態
+            content.classList.toggle('expanded');
+            chevron.classList.toggle('expanded');
+            
+            // 更新箭頭方向
+            chevron.style.transform = content.classList.contains('expanded') 
+                ? 'rotate(180deg)' 
+                : 'rotate(0deg)';
+        }
+
+        function checkPastEvents() {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+    const currentDate = today.getDate();
+    
+    // 獲取所有學術活動區段
+    const academicSections = document.querySelectorAll('.academic-section');
+    
+    academicSections.forEach(section => {
+        // 從日期欄位獲取日期文本
+        const dateText = section.querySelector('.event-date').textContent;
+        const monthDay = dateText.split('/');
+        
+        // 解析日期
+        const month = parseInt(monthDay[0]) - 1; // JavaScript 月份從 0 開始
+        const day = parseInt(monthDay[1]);
+        const year = month === 11 ? 2024 : 2025; // 12月用2024年，其他用2025年
+        
+        // 創建活動日期物件
+        const eventDate = new Date(year, month, day);
+        
+        // 移除所有可能的類別
+        section.classList.remove('past-event', 'current-event');
+        
+        // 檢查是否為當天
+        if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+            section.classList.add('current-event');
+        }
+        // 檢查是否為過去的日期（但不是當天）
+        else if (eventDate < today) {
+            section.classList.add('past-event');
+        }
+    });
+}
+
+// 頁面載入時執行檢查
+document.addEventListener('DOMContentLoaded', checkPastEvents);
+
+// 切換月份時重新執行檢查
+function switchMonth(month) {
+    // 使用ID直接選取按鈕
+    const aprilTab = document.getElementById('april-tab');
+    const marchTab = document.getElementById('march-tab');
+    
+    // 移除所有active類
+    aprilTab.classList.remove('active');
+    marchTab.classList.remove('active');
+    
+    // 根據所選月份設置active類
+    if (month === 'feb') { // feb實際上是4月的內容
+        aprilTab.classList.add('active');
+        document.getElementById('febSchedule').style.display = 'block';
+        document.getElementById('janSchedule').style.display = 'none';
+    } else if (month === 'mar') {
+        marchTab.classList.add('active');
+        document.getElementById('febSchedule').style.display = 'none';
+        document.getElementById('janSchedule').style.display = 'block';
+    }
+    
+    // 更新事件狀態
+    checkPastEvents();
+    checkHolidayEvents();
+}
+
+
+// 初始化時顯示目前月份
+document.addEventListener('DOMContentLoaded', () => {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1; // JavaScript 月份從 0 開始
+    
+    // 根據當前月份決定顯示哪個月份的內容
+    if (currentMonth === 2) {
+        switchMonth('feb');
+    } else if (currentMonth === 3) {
+        switchMonth('mar');
+    } else {
+        // 預設顯示 2 月
+        switchMonth('feb');
+    }
+});
+
+function toggleSection(header) {
+    const content = header.nextElementSibling;
+    const chevron = header.querySelector('.chevron-icon');
+    
+    // 切換展開狀態
+    content.classList.toggle('expanded');
+    chevron.classList.toggle('expanded');
+    
+    // 更新箭頭方向
+    chevron.style.transform = content.classList.contains('expanded') 
+        ? 'rotate(180deg)' 
+        : 'rotate(0deg)';
+}
+
+function checkPastEvents() {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth();
+    const currentDate = today.getDate();
+    
+    // 獲取所有學術活動區段
+    const academicSections = document.querySelectorAll('.academic-section');
+    
+    academicSections.forEach(section => {
+        // 從日期欄位獲取日期文本
+        const dateText = section.querySelector('.event-date').textContent;
+        const monthDay = dateText.split('/');
+        
+        // 解析日期
+        const month = parseInt(monthDay[0]) - 1; // JavaScript 月份從 0 開始
+        const day = parseInt(monthDay[1]);
+        const year = month === 11 ? 2024 : 2025; // 12月用2024年，其他用2025年
+        
+        // 創建活動日期物件
+        const eventDate = new Date(year, month, day);
+        
+        // 移除所有可能的類別
+        section.classList.remove('past-event', 'current-event');
+        
+        // 檢查是否為當天
+        if (year === today.getFullYear() && month === today.getMonth() && day === today.getDate()) {
+            section.classList.add('current-event');
+        }
+        // 檢查是否為過去的日期（但不是當天）
+        else if (eventDate < today) {
+            section.classList.add('past-event');
+        }
+    });
+}
+
+// 添加櫻花飄落效果
+function createSakura() {
+    const sakura = document.createElement('div');
+    sakura.className = 'sakura';
+    
+    const startPositionLeft = Math.random() * window.innerWidth;
+    sakura.style.left = startPositionLeft + 'px';
+    
+    const animationDuration = 5 + Math.random() * 5;
+    sakura.style.animation = `fall ${animationDuration}s linear`;
+    
+    document.body.appendChild(sakura);
+    
+    setTimeout(() => {
+        sakura.remove();
+    }, animationDuration * 1000);
+}
+
+function toggleReservation() {
+    document.getElementById('reservationPanel').classList.add('active');
+}
+
+function closeReservation() {
+    document.getElementById('reservationPanel').classList.remove('active');
+}
+
+function toggleMemory() {
+    document.getElementById('memoryPanel').classList.add('active');
+    document.getElementById('passwordScreen').classList.remove('hidden');
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('errorMessage').textContent = '';
+}
+
+function closeMemory() {
+    document.getElementById('memoryPanel').classList.remove('active');
+    document.getElementById('passwordScreen').classList.remove('hidden');
+}
+
+function toggleSchedule() {
+    document.getElementById('dailyOverviewPanel').classList.add('active');
+    renderDailyOverview();
+}
+
+function closeSchedule() {
+    document.getElementById('schedulePanel').classList.remove('active');
+}
+
+function closeDailyOverview() {
+    document.getElementById('dailyOverviewPanel').classList.remove('active');
+    document.getElementById('schedulePanel').classList.add('active');
+}
+
+const encryptedMemories = {
+    data: null,
+    isAuthenticated: false
+};
+
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+        clearAuthenticationState();
+    }
+});
+
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        clearAuthenticationState();
+    }
+});
+
+function clearAuthenticationState() {
+    encryptedMemories.isAuthenticated = false;
+    encryptedMemories.data = null;
+    const grid = document.querySelector('.memory-grid');
+    if (grid) {
+        grid.innerHTML = '';
+    }
+    const passwordScreen = document.getElementById('passwordScreen');
+    if (passwordScreen) {
+        passwordScreen.classList.remove('hidden');
+    }
+    const memoryPanel = document.getElementById('memoryPanel');
+    if (memoryPanel && memoryPanel.classList.contains('active')) {
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('errorMessage').textContent = '';
+    }
+}
+
+function checkPassword() {
+  const password = document.getElementById('passwordInput').value;
+  if (password === '0915') {
+    encryptedMemories.data = [...memories]; // 將 memories 的資料複製到 encryptedMemories.data
+    encryptedMemories.isAuthenticated = true;
+    document.getElementById('passwordScreen').classList.add('hidden');
+    renderMemories('desc');
+  } else {
+    document.getElementById('errorMessage').textContent = '密碼錯誤';
+    document.getElementById('passwordInput').value = '';
+    encryptedMemories.isAuthenticated = false;
+    const grid = document.querySelector('.memory-grid');
+    grid.innerHTML = '';
+  }
+}
+
+function renderMemories(order = 'desc') {
+    if (!encryptedMemories.isAuthenticated || !encryptedMemories.data) {
+        document.getElementById('passwordScreen').classList.remove('hidden');
+        const grid = document.querySelector('.memory-grid');
+        grid.innerHTML = '';
+        return;
+    }
+
+    document.querySelectorAll('.sort-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    document.querySelector(`.sort-btn[onclick*='${order}']`).classList.add('active');
+
+    const sortedMemories = [...encryptedMemories.data];
+    
+    const monthMap = {
+        'January': 0, 'February': 1, 'March': 2, 'April': 3,
+        'May': 4, 'June': 5, 'July': 6, 'August': 7,
+        'September': 8, 'October': 9, 'November': 10, 'December': 11
+    };
+
+    function parseCustomDate(dateStr) {
+        dateStr = dateStr.replace(/-\d{4}$/, '');
+        const parts = dateStr.split(' ');
+        const month = monthMap[parts[0]];
+        const day = parseInt(parts[1].split('-')[0]);
+        const year = parseInt(parts[parts.length - 1]);
+        return new Date(year, month, day);
+    }
+
+    sortedMemories.sort((a, b) => {
+        const dateA = parseCustomDate(a.date);
+        const dateB = parseCustomDate(b.date);
+        return order === 'desc' ? dateB - dateA : dateA - dateB;
+    });
+
+    const grid = document.querySelector('.memory-grid');
+    grid.innerHTML = sortedMemories.map(memory => `
+        <div class="memory-card" onclick="window.open('${memory.link}', '_blank')">
+            <img 
+                src="${memory.image}" 
+                alt="${memory.title}" 
+                class="memory-image"
+                onload="this.style.height = 'auto'"
+            >
+            <div class="memory-content">
+                <div class="memory-date">${memory.date}</div>
+                <div class="memory-title">${memory.title}</div>
+                <div class="memory-link-container">
+                    <span class="memory-link">
+                        查看相簿 →
+                    </span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function togglePlanning() {
+    document.getElementById('planningPanel').classList.add('active');
+    checkPlanningDates();
+}
+
+function checkPlanningDates() {
+    const today = new Date();
+    const planningItems = document.querySelectorAll('.planning-item');
+    
+    planningItems.forEach(item => {
+        const dateText = item.querySelector('.planning-date').textContent;
+        const dates = dateText.match(/(\d{1,2})月(\d{1,2})日/g);
+        if (!dates) return;
+        
+        const firstDate = dates[0].match(/(\d{1,2})月(\d{1,2})日/);
+        const lastDate = dates.length > 1 ? dates[1].match(/(\d{1,2})月(\d{1,2})日/) : firstDate;
+        
+        const year = (firstDate[1] <= 12 && firstDate[1] >= 1) ? 2025 : 2024;
+        const startDate = new Date(year, parseInt(firstDate[1])-1, parseInt(firstDate[2]));
+        const endDate = new Date(year, parseInt(lastDate[1])-1, parseInt(lastDate[2]));
+        
+        item.classList.remove('past-event', 'current-event');
+        
+        if (isDateBetween(today, startDate, endDate)) {
+            item.classList.add('current-event');
+        } else if (endDate < today) {
+            item.classList.add('past-event');
+        }
+    });
+}
+
+function isDateBetween(date, start, end) {
+    return date >= start && date <= end;
+}
+
+function closePlanning() {
+    document.getElementById('planningPanel').classList.remove('active');
+}
+
+document.getElementById('passwordInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        checkPassword();
+    }
+});
+
+setInterval(createSakura, 300);
+
+function checkHolidayEvents() {
+    const today = new Date();
+    const holidayItems = document.querySelectorAll('.holiday-item');
+    
+    holidayItems.forEach(item => {
+        const dateText = item.querySelector('.date').textContent;
+        let dates;
+        
+        // 處理不同格式的日期 (可能是4/26-27或者4/26)
+        if (dateText.includes('-')) {
+            const parts = dateText.split('-');
+            const firstPart = parts[0];
+            const secondPart = parts[1];
+            
+            // 提取出月和日
+            const firstMatch = firstPart.match(/(\d{1,2})\/(\d{1,2})/);
+            if (!firstMatch) return;
+            
+            const firstMonth = parseInt(firstMatch[1]);
+            const firstDay = parseInt(firstMatch[2]);
+            
+            let lastMonth, lastDay;
+            
+            // 檢查第二部分是否包含月份
+            if (secondPart.includes('/')) {
+                const secondMatch = secondPart.match(/(\d{1,2})\/(\d{1,2})/);
+                if (secondMatch) {
+                    lastMonth = parseInt(secondMatch[1]);
+                    lastDay = parseInt(secondMatch[2]);
+                }
+            } else {
+                // 如果第二部分只有日，則月份與第一部分相同
+                lastMonth = firstMonth;
+                lastDay = parseInt(secondPart);
+            }
+            
+            // 使用相同的年份 (2025)
+            const startDate = new Date(2025, firstMonth-1, firstDay);
+            const endDate = new Date(2025, lastMonth-1, lastDay);
+            
+            item.classList.remove('past-event', 'current-event');
+            
+            if (isDateBetween(today, startDate, endDate)) {
+                item.classList.add('current-event');
+            } else if (endDate < today) {
+                item.classList.add('past-event');
+            }
+        } else {
+            // 處理單一日期
+            const match = dateText.match(/(\d{1,2})\/(\d{1,2})/);
+            if (!match) return;
+            
+            const month = parseInt(match[1]);
+            const day = parseInt(match[2]);
+            
+            const eventDate = new Date(2025, month-1, day);
+            
+            item.classList.remove('past-event', 'current-event');
+            
+            if (isSameDay(today, eventDate)) {
+                item.classList.add('current-event');
+            } else if (eventDate < today) {
+                item.classList.add('past-event');
+            }
+        }
+    });
+}
+
+// 檢查兩個日期是否是同一天
+function isSameDay(date1, date2) {
+    return date1.getDate() === date2.getDate() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getFullYear() === date2.getFullYear();
+}
+</script>
+
+<script type="text/babel">
+const DailySchedule = () => {
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+  
+  const getHolidaysFromDOM = () => {
+    const holidayItems = document.querySelectorAll('.holiday-plans .holiday-item');
+    const holidays = [];
+    
+    holidayItems.forEach(item => {
+        const dateText = item.querySelector('.date').textContent;
+        const eventText = item.querySelector('.event').textContent;
+        
+        const dates = dateText.match(/(\d{1,2})\/(\d{1,2})/g);
+        if (!dates) return;
+        
+        const firstDate = dates[0].split('/');
+        const lastDate = dates.length > 1 ? dates[1].split('/') : firstDate;
+        
+        const startYear = parseInt(firstDate[0]) <= 12 ? 2025 : 2024;
+        const endYear = parseInt(lastDate[0]) <= 12 ? 2025 : 2024;
+        
+        const startDate = new Date(startYear, parseInt(firstDate[0])-1, parseInt(firstDate[1]));
+        const endDate = new Date(endYear, parseInt(lastDate[0])-1, parseInt(lastDate[1]));
+        
+        holidays.push({
+            title: eventText,
+            startDate,
+            endDate
+        });
+    });
+    
+    return holidays;
+  };
+
+  // 獲取當天的預排行程
+  const getPlannedEvents = () => {
+    const planningItems = document.querySelectorAll('.planning-item');
+    const todayEvents = [];
+    
+    planningItems.forEach(item => {
+      const dateText = item.querySelector('.planning-date').textContent;
+      const title = item.querySelector('.planning-title').textContent;
+      
+      const dates = dateText.match(/(\d{1,2})月(\d{1,2})日/g);
+      if (!dates) return;
+      
+      const firstDate = dates[0].match(/(\d{1,2})月(\d{1,2})日/);
+      const lastDate = dates.length > 1 ? dates[1].match(/(\d{1,2})月(\d{1,2})日/) : firstDate;
+      
+      const startDate = new Date(2025, parseInt(firstDate[1])-1, parseInt(firstDate[2]));
+      const endDate = new Date(2025, parseInt(lastDate[1])-1, parseInt(lastDate[2]));
+      
+      if (isDateBetween(today, startDate, endDate)) {
+        todayEvents.push({ title, startDate, endDate });
+      }
+    });
+    
+    return todayEvents;
+  };
+
+  // 獲取當天的假日計畫
+  // 在 DailySchedule 組件中修改這段邏輯
+const getHolidayPlans = () => {
+    const holidayItems = document.querySelectorAll('.holiday-item');
+    const today = new Date();
+    const todayPlans = [];
+    const futurePlans = [];
+    
+    holidayItems.forEach(item => {
+        const dateText = item.querySelector('.date').textContent;
+        const event = item.querySelector('.event').textContent;
+        
+        const dates = dateText.match(/(\d{1,2})[\/-](\d{1,2})/g);
+        if (!dates) return;
+        
+        // 處理日期格式 (4/26-27)
+        let firstDate, lastDate;
+        if (dateText.includes('-')) {
+            // 處理範圍日期 (如 4/26-27)
+            const parts = dateText.split('-');
+            firstDate = parts[0].split('/').map(num => parseInt(num));
+            
+            // 若第二部分沒有月份，則使用第一部分的月份
+            if (parts[1].indexOf('/') === -1) {
+                lastDate = [firstDate[0], parseInt(parts[1])];
+            } else {
+                lastDate = parts[1].split('/').map(num => parseInt(num));
+            }
+        } else {
+            // 處理單日期 (如 4/26)
+            firstDate = dateText.split('/').map(num => parseInt(num));
+            lastDate = firstDate;
+        }
+        
+        // 建立日期對象
+        const startDate = new Date(2025, firstDate[0]-1, firstDate[1]);
+        const endDate = new Date(2025, 
+                               lastDate.length > 1 ? lastDate[0]-1 : firstDate[0]-1, 
+                               lastDate.length > 1 ? lastDate[1] : lastDate[0]);
+        
+        const plan = { 
+            event, 
+            startDate, 
+            endDate,
+            daysUntil: Math.ceil((startDate - today) / (1000 * 60 * 60 * 24))
+        };
+
+        // 如果是當天的活動
+        if (isDateBetween(today, startDate, endDate)) {
+            todayPlans.push(plan);
+        } 
+        // 如果是未來的活動
+        else if (startDate > today) {
+            futurePlans.push(plan);
+        }
+    });
+    
+    // 如果有當天的活動，返回當天的活動
+    if (todayPlans.length > 0) {
+        return todayPlans;
+    }
+    
+    // 否則返回最近的一個未來活動
+    return futurePlans
+        .sort((a, b) => a.daysUntil - b.daysUntil)
+        .slice(0, 1);
+};
+
+  const getSpecialSchedule = () => {
+    const currentMonth = today.getMonth() + 1;
+    const currentDate = today.getDate();
+    
+    // 檢查是否在休診期間 (3/5-3/10)
+    if (currentMonth === 3 && currentDate >= 5 && currentDate <= 10) {
+      return [];
+    }
+    
+    return null; // 返回 null 表示使用一般排程
+  };
+
+  const getAssignedSaturdays = () => {
+    const currentMonth = today.getMonth() + 1;
+    
+    if (currentMonth === 3) {
+      return [
+        { month: 3, day: 1 },
+        { month: 3, day: 22 },
+        { month: 3, day: 29 }
+      ];
+    }
+    return [];
+  };
+
+  const getAcademicEventsFromDOM = () => {
+    const academicSections = document.querySelectorAll('.academic-section');
+    const events = [];
+    
+    academicSections.forEach(section => {
+      const dateText = section.querySelector('.event-date').textContent;
+      const title = section.querySelector('.event-title').textContent;
+      const weekday = section.querySelector('.event-weekday').textContent;
+      
+      // 從日期文本中提取月和日
+      const [month, day] = dateText.split('/').map(num => parseInt(num));
+      
+      let presenter = '';
+      let location = '';
+      let time = '';
+      
+      const contentDiv = section.querySelector('.section-content');
+      if (contentDiv) {
+        // 尋找報告人
+        const presenterLabel = Array.from(contentDiv.querySelectorAll('.content-label'))
+          .find(el => el.textContent.includes('報告人'));
+        if (presenterLabel) {
+          presenter = presenterLabel.nextElementSibling.textContent;
+        }
+        
+        // 尋找地點
+        const locationLabel = Array.from(contentDiv.querySelectorAll('.content-label'))
+          .find(el => el.textContent.includes('地點'));
+        if (locationLabel) {
+          location = locationLabel.nextElementSibling.textContent;
+        }
+        
+        // 尋找時間
+        const timeLabel = Array.from(contentDiv.querySelectorAll('.content-label'))
+          .find(el => el.textContent.includes('時間'));
+        if (timeLabel) {
+          time = timeLabel.nextElementSibling.textContent;
+        }
+      }
+      
+      // 所有學術活動都在 2025 年
+      const eventDate = new Date(2025, month-1, day);
+      
+      events.push({ 
+        title, 
+        date: eventDate,
+        weekday: weekday.replace(/[()]/g, ''),
+        presenter, 
+        location,
+        time 
+      });
+    });
+    
+    return events.sort((a, b) => a.date - b.date);
+  };
+
+  const getScheduleForToday = () => {
+    // 先檢查是否有特殊時段
+    const specialSchedule = getSpecialSchedule();
+    if (specialSchedule !== null) {
+      return specialSchedule;
+    }
+
+    // 檢查是否為指定週六
+    if (dayOfWeek === 6) {
+      const assignedSaturdays = getAssignedSaturdays();
+      const currentMonth = today.getMonth() + 1;
+      const currentDate = today.getDate();
+      
+      const isAssignedSaturday = assignedSaturdays.some(date => 
+        date.month === currentMonth && date.day === currentDate
+      );
+      
+      if (isAssignedSaturday) {
+        return ['早上', '下午'];
+      }
+      return [];
+    }
+
+    // 一般工作日的時段
+    switch(dayOfWeek) {
+      case 1: // 週一
+      case 2: // 週二
+        return ['早上', '下午'];
+      case 3: // 週三
+      case 4: // 週四
+        return ['下午', '晚上'];
+      case 5: // 週五
+        return ['早上', '晚上'];
+      default:
+        return [];
+    }
+  };
+
+  const calculateDaysLeft = (date) => {
+    const timeDiff = date.getTime() - today.getTime();
+    return Math.ceil(timeDiff / (1000 * 3600 * 24));
+  };
+
+  const isDateBetween = (date, start, end) => {
+    const targetDate = new Date(date);
+    targetDate.setHours(0, 0, 0, 0);
+    const startDate = new Date(start);
+    startDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(end);
+    endDate.setHours(0, 0, 0, 0);
+    return targetDate >= startDate && targetDate <= endDate;
+  };
+
+  const isToday = (date) => {
+    return date.getDate() === today.getDate() &&
+           date.getMonth() === today.getMonth() &&
+           date.getFullYear() === today.getFullYear();
+  };
+
+  const getScheduleEmoji = (time) => {
+    switch(time) {
+      case '早上': return '🌅';
+      case '下午': return '🌇';
+      case '晚上': return '🌙';
+      default: return '⏰';
+    }
+  };
+
+  const holidays = getHolidaysFromDOM();
+  const academicEvents = getAcademicEventsFromDOM();
+  const schedule = getScheduleForToday();
+  const todayEvents = academicEvents.filter(e => isToday(e.date));
+  const nextHoliday = holidays
+    .filter(h => h.startDate >= today || h.endDate >= today)
+    .sort((a, b) => a.startDate - b.startDate)[0];
+  const nextAcademicEvent = academicEvents
+    .filter(e => e.date > today)
+    .sort((a, b) => a.date - b.date)[0];
+  const plannedEvents = getPlannedEvents();
+  const holidayPlans = getHolidayPlans();
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-3 md:p-6">
+      <div className="max-w-lg mx-auto space-y-4 md:space-y-6">
+        {/* 日期顯示 */}
+        <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-800">
+                {today.getFullYear()}年{today.getMonth() + 1}月{today.getDate()}日
+              </h2>
+              <p className="text-sm md:text-base text-gray-600 mt-1">
+                {['週日', '週一', '週二', '週三', '週四', '週五', '週六'][dayOfWeek]}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* 預排行程 */}
+        {plannedEvents.length > 0 && (
+          <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg">
+            <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-3">今日行程</h3>
+            <div className="space-y-3">
+              {plannedEvents.map((event, index) => (
+                <div 
+                  key={index}
+                  className="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg p-4"
+                >
+                  <h4 className="font-semibold text-base md:text-lg">{event.title}</h4>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+
+        {/* 今日班表 */}
+        <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg">
+          <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-3">今日班表</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {schedule.map((time, index) => (
+              <div 
+                key={index}
+                className="bg-gradient-to-r from-indigo-500 to-blue-500 text-white rounded-lg p-3 md:p-4 shadow"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xl">{getScheduleEmoji(time)}</span>
+                    <span className="text-sm md:text-base font-medium">{time}</span>
+                  </div>
+                  <div className="w-2 h-2 rounded-full bg-white animate-pulse"></div>
+                </div>
+              </div>
+            ))}
+            {schedule.length === 0 && (
+              <div className="col-span-1 md:col-span-2 text-center p-3 md:p-4 bg-gray-100 rounded-lg text-gray-600 text-sm md:text-base">
+                今日休診
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 今日學術活動 */}
+        {todayEvents.length > 0 && (
+          <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg">
+            <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-3">今日學術活動</h3>
+            <div className="space-y-3">
+              {todayEvents.map((event, index) => (
+                <div 
+                  key={index}
+                  className="bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg p-4"
+                >
+                  <h4 className="font-semibold text-base md:text-lg">{event.title}</h4>
+                  {event.time && (
+                    <p className="text-orange-50 text-xs md:text-sm mt-1">
+                      時間：{event.time}
+                    </p>
+                  )}
+                  {event.presenter && (
+                    <p className="text-orange-50 text-xs md:text-sm mt-1">
+                      報告人：{event.presenter}
+                    </p>
+                  )}
+                  {event.location && (
+                    <p className="text-orange-50 text-xs md:text-sm mt-1">
+                      地點：{event.location}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 下次學術活動 */}
+        {nextAcademicEvent && !isToday(nextAcademicEvent.date) && (
+          <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg">
+            <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-3">下次學術活動</h3>
+            <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg p-4">
+              <div className="flex justify-between items-start">
+                <div className="flex-1 pr-4">
+                  <h4 className="font-semibold text-base md:text-lg">{nextAcademicEvent.title}</h4>
+                  <p className="text-purple-50 text-xs md:text-sm mt-1">
+                    {nextAcademicEvent.date.getMonth() + 1}/{nextAcademicEvent.date.getDate()}
+                  </p>
+                  {nextAcademicEvent.time && (
+                    <p className="text-purple-50 text-xs md:text-sm mt-1">
+                      時間：{nextAcademicEvent.time}
+                    </p>
+                  )}
+                  {nextAcademicEvent.presenter && (
+                    <p className="text-purple-50 text-xs md:text-sm mt-1">
+                      報告人：{nextAcademicEvent.presenter}
+                    </p>
+                  )}
+                  {nextAcademicEvent.location && (
+                    <p className="text-purple-50 text-xs md:text-sm mt-1">
+                      地點：{nextAcademicEvent.location}
+                    </p>
+                  )}
+                </div>
+                <div className="bg-white text-purple-500 rounded-full p-2 md:p-3 font-bold text-center min-w-[3rem] md:min-w-[4rem] transform -rotate-12 shadow">
+                  <span className="block text-base md:text-lg">{calculateDaysLeft(nextAcademicEvent.date)}</span>
+                  <span className="block text-xs">天</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+		{/* 假日計畫 */}
+        {holidayPlans.length > 0 && (
+          <div className="bg-white rounded-xl p-4 md:p-6 shadow-lg">
+            <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-3">假日計畫</h3>
+            <div className="space-y-3">
+              {holidayPlans.map((holiday, index) => (
+                <div 
+                  key={index}
+                  className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg p-4"
+                >
+                  <h4 className="font-semibold text-base md:text-lg">{holiday.event}</h4>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+
+        {/* 查看完整行程表按鈕 */}
+        <button 
+          onClick={() => {
+            document.getElementById('dailyOverviewPanel').classList.remove('active');
+            document.getElementById('schedulePanel').classList.add('active');
+          }}
+          className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl py-3 md:py-4 px-4 shadow-lg hover:opacity-90 transition-opacity text-sm md:text-base font-medium"
+        >
+          查看完整行程表        
+        </button>
+      </div>
+    </div>
+  );
+};
+
+
+function renderDailyOverview() {
+    const container = document.getElementById('dailyOverviewContent');
+    const root = ReactDOM.createRoot(container);
+    root.render(React.createElement(DailySchedule));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded');
+    switchMonth('feb');
+});
+// 財務面板相關函數
+function toggleFinance() {
+    document.getElementById('financePanel').classList.add('active');
+    // 初始化當前月份為系統當前月份
+    currentMonth = new Date();
+    renderFinanceCalendar();
+}
+// 記帳密碼相關函數
+function showTrackingPassword() {
+    const passwordScreen = document.getElementById('trackingPasswordScreen');
+    passwordScreen.style.display = 'flex';
+    document.getElementById('trackingPasswordInput').value = '';
+    document.getElementById('trackingErrorMessage').textContent = '';
+    document.getElementById('trackingPasswordInput').focus();
+}
+
+function closeTrackingPassword() {
+    document.getElementById('trackingPasswordScreen').style.display = 'none';
+}
+
+function checkTrackingPassword() {
+    const password = document.getElementById('trackingPasswordInput').value;
+    if (password === '0915') {
+        window.open('https://docs.google.com/spreadsheets/d/1ViTtirLqmS3YiK5WP0Y_DARpyQFEuYfG/edit?usp=sharing&ouid=103931640159563301638&rtpof=true&sd=true', '_blank');
+        closeTrackingPassword();
+    } else {
+        document.getElementById('trackingErrorMessage').textContent = '密碼錯誤';
+        document.getElementById('trackingPasswordInput').value = '';
+    }
+}
+
+// DOM 載入完成後添加事件監聽
+document.addEventListener('DOMContentLoaded', function() {
+    // 為記帳密碼輸入框添加回車鍵支援
+    const trackingPasswordInput = document.getElementById('trackingPasswordInput');
+    if (trackingPasswordInput) {
+        trackingPasswordInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkTrackingPassword();
+            }
+        });
+    }
+    
+    // 點擊背景關閉密碼輸入框
+    const trackingPasswordScreen = document.getElementById('trackingPasswordScreen');
+    if (trackingPasswordScreen) {
+        trackingPasswordScreen.addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeTrackingPassword();
+            }
+        });
+    }
+});
+
+function closeFinance() {
+    document.getElementById('financePanel').classList.remove('active');
+}
+
+function switchFinanceTab(tab) {
+    // 更新標籤狀態
+    document.querySelectorAll('.finance-tab').forEach(t => {
+        t.classList.remove('active');
+    });
+    event.currentTarget.classList.add('active');
+
+    // 切換視圖
+    const calendarView = document.getElementById('financeCalendarView');
+    const listView = document.getElementById('financeListView');
+    
+    if (tab === 'calendar') {
+        calendarView.style.display = 'block';
+        listView.style.display = 'none';
+        // 確保切換到日曆視圖時也顯示當前月份
+        currentMonth = new Date();
+        renderFinanceCalendar();
+    } else {
+        calendarView.style.display = 'none';
+        listView.style.display = 'block';
+    }
+}
+
+
+// 財務數據
+const financeEvents = {
+    monthly: [
+        { type: 'subscription', name: 'Apple 雲端', amount: 90, date: 21 },
+        { type: 'subscription', name: 'YouTube Premium', amount: 119, date: 19 }
+    ],
+    creditCards: [
+        { type: 'credit-card', name: '玉山', date: 6 },
+{ type: 'credit-card', name: '國泰世華', date: 10 },
+        { type: 'credit-card', name: '聯邦', date: 12 },
+        { type: 'credit-card', name: '台新', date: 17 },
+        { type: 'credit-card', name: '永豐', date: 19 }
+    ],
+    annual: [
+        { 
+            type: 'annual', 
+            name: 'Google One', 
+            amount: 650, 
+            dates: ['2025-12-25', '2026-12-25', '2027-12-25']
+        },
+        { 
+            type: 'annual', 
+            name: 'Netflix', 
+            amount: 2640, 
+            dates: ['2025-02-01', '2026-02-01', '2027-02-01']
+        }
+    ]
+};
+
+// 日曆相關變量
+let currentMonth = new Date();
+
+// 日曆導航函數
+function prevMonth() {
+    currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1);
+    renderFinanceCalendar();
+}
+
+function nextMonth() {
+    currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1);
+    renderFinanceCalendar();
+}
+
+// 獲取當月的天數
+function getDaysInMonth(date) {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+}
+
+// 獲取當月第一天是星期幾
+function getFirstDayOfMonth(date) {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+}
+
+// 檢查日期是否有財務事項
+function getDateEvents(year, month, day) {
+    const events = [];
+    const currentDate = new Date();
+    const checkDate = new Date(year, month, day);
+
+    // 檢查月付訂閱
+    financeEvents.monthly.forEach(event => {
+        if (event.date === day) {
+            events.push(event);
+        }
+    });
+
+    // 檢查信用卡
+    financeEvents.creditCards.forEach(event => {
+        if (event.date === day) {
+            events.push(event);
+        }
+    });
+
+    // 檢查年費 - 現在檢查多個年份的日期
+    financeEvents.annual.forEach(event => {
+        event.dates.forEach(dateStr => {
+            const eventDate = new Date(dateStr);
+            if (eventDate.getFullYear() === year &&
+                eventDate.getMonth() === month &&
+                eventDate.getDate() === day) {
+                events.push({
+                    ...event,
+                    date: dateStr // 保留具體日期信息
+                });
+            }
+        });
+    });
+
+    return events;
+}
+
+// 檢查是否需要提醒
+function isUrgent(year, month, day) {
+    const today = new Date();
+    const checkDate = new Date(year, month, day);
+    const diffDays = Math.ceil((checkDate - today) / (1000 * 60 * 60 * 24));
+    
+    return diffDays >= 0 && diffDays <= 3;
+}
+
+// 渲染日曆
+function renderFinanceCalendar() {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const daysInMonth = getDaysInMonth(currentMonth);
+    const firstDay = getFirstDayOfMonth(currentMonth);
+
+    // 更新月份顯示
+    const monthNames = ['一月', '二月', '三月', '四月', '五月', '六月', 
+                       '七月', '八月', '九月', '十月', '十一月', '十二月'];
+    document.querySelector('.calendar-month').textContent = 
+        `${year}年${monthNames[month]}`;
+
+    // 生成日曆網格
+    const calendarGrid = document.querySelector('.calendar-grid');
+    let gridContent = `
+        <div class="calendar-weekday">日</div>
+        <div class="calendar-weekday">一</div>
+        <div class="calendar-weekday">二</div>
+        <div class="calendar-weekday">三</div>
+        <div class="calendar-weekday">四</div>
+        <div class="calendar-weekday">五</div>
+        <div class="calendar-weekday">六</div>
+    `;
+
+    // 添加空白天數
+    for (let i = 0; i < firstDay; i++) {
+        gridContent += `<div class="calendar-day"></div>`;
+    }
+
+    // 添加月份天數
+    for (let day = 1; day <= daysInMonth; day++) {
+        const events = getDateEvents(year, month, day);
+        const urgent = isUrgent(year, month, day);
+        const hasEvents = events.length > 0;
+        const isToday = new Date().getDate() === day && 
+                       new Date().getMonth() === month && 
+                       new Date().getFullYear() === year;
+
+        gridContent += `
+            <div class="calendar-day ${hasEvents ? 'has-event' : ''} 
+                                    ${urgent && hasEvents ? 'urgent' : ''} 
+                                    ${isToday ? 'today' : ''}"
+                 onclick="showDateDetail(${year}, ${month}, ${day})"
+                 style="cursor: pointer;">
+                <div class="day-number">${day}</div>
+                ${events.map(event => `
+                    <div class="day-event" title="${event.name}">
+                        ${event.type === 'credit-card' ? '💳' : '📱'} ${event.name}
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    calendarGrid.innerHTML = gridContent;
+    updateReminders();
+}
+
+function showDateDetail(year, month, day) {
+    const events = getDateEvents(year, month, day);
+    const modal = document.getElementById('calendarModal');
+    const title = modal.querySelector('.modal-title');
+    const eventList = modal.querySelector('.event-list');
+    
+    const date = new Date(year, month, day);
+    const weekdays = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+    
+    title.textContent = `${year}年${month + 1}月${day}日 ${weekdays[date.getDay()]}`;
+    
+    if (events.length > 0) {
+        eventList.innerHTML = events.map(event => `
+            <div class="event-item ${event.type}">
+                <div class="event-header">
+                    <div class="event-name">
+                        <span class="event-icon">
+                            ${event.type === 'credit-card' ? '💳' : 
+                              event.type === 'subscription' ? '📱' : '📅'}
+                        </span>
+                        ${event.name}
+                    </div>
+                    ${event.amount ? `
+                        <div class="event-amount">NT$ ${event.amount}</div>
+                    ` : ''}
+                </div>
+                <div class="event-details">
+                    ${event.type === 'credit-card' ? '信用卡帳單結帳日' :
+                      event.type === 'subscription' ? '月費訂閱扣款日' : '年費扣款日'}
+                </div>
+            </div>
+        `).join('');
+    } else {
+        eventList.innerHTML = '<div class="no-events">這一天沒有財務事項</div>';
+    }
+    
+    modal.classList.add('active');
+}
+
+
+// 關閉模態框
+function closeModal() {
+    document.getElementById('calendarModal').classList.remove('active');
+}
+
+// 點擊模態框背景關閉
+document.getElementById('calendarModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('calendarModal')) {
+        closeModal();
+    }
+});
+
+// 更新提醒區域
+function updateReminders() {
+    const today = new Date();
+    const remindersSection = document.querySelector('.reminders-section');
+    const reminders = [];
+
+    // 收集所有需要提醒的事項
+    for (let i = 0; i <= 7; i++) {
+        const checkDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+        const events = getDateEvents(
+            checkDate.getFullYear(),
+            checkDate.getMonth(),
+            checkDate.getDate()
+        );
+
+        events.forEach(event => {
+            const daysUntil = i;
+            const isUrgent = daysUntil <= 3;
+
+            reminders.push({
+                event,
+                daysUntil,
+                isUrgent
+            });
+        });
+    }
+
+    // 渲染提醒
+    const reminderHTML = reminders
+        .sort((a, b) => a.daysUntil - b.daysUntil)
+        .map(reminder => `
+            <div class="reminder-item ${reminder.isUrgent ? 'urgent' : ''}">
+                <div class="reminder-icon">
+                    ${reminder.event.type === 'credit-card' ? '💳' : 
+                      reminder.event.type === 'subscription' ? '📱' : '📅'}
+                </div>
+                <div class="reminder-content">
+                    <div class="reminder-title">
+                        ${reminder.event.name}
+                        ${reminder.event.amount ? ` - NT$ ${reminder.event.amount}` : ''}
+                    </div>
+                    <div class="reminder-date">
+                        ${reminder.daysUntil === 0 ? '今天到期' :
+                          reminder.daysUntil === 1 ? '明天到期' :
+                          `還有 ${reminder.daysUntil} 天`}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+    remindersSection.innerHTML = reminderHTML || '<div class="no-reminders">近期沒有需要提醒的事項</div>';
+}
+
+// 初始化
+document.addEventListener('DOMContentLoaded', () => {
+    // 初始化當前月份為系統當前月份
+    currentMonth = new Date();
+    renderFinanceCalendar();
+});
+</script>
+</body>
+</html>
