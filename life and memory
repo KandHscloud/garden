@@ -3017,6 +3017,12 @@ z-index: 11;
         title: "Mr.K&D’s 情人節印度料理&九份遊",
         image: 'https://hackmd.io/_uploads/ry0uIfg9Jl.png',
         link: 'https://photos.app.goo.gl/9Kd5Jvo3RbEzabNr8'  
+    },
+	{
+        date: 'March 5-10, 2025',
+        title: "Mr.K&D’s Love in Tokyo & Sapporo",
+        image: 'https://hackmd.io/_uploads/r1v7aPCjkx.png',
+        link: 'https://sites.google.com/view/loveinjapan-march-2025/%E9%A6%96%E9%A0%81'  
     }
 
         ];	
