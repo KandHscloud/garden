@@ -131,9 +131,12 @@ html {
     right: 0;
     bottom: 0;
     background-image: url('https://hackmd.io/_uploads/BynV0DP6yg.jpg');
-    background-size: cover;
+    background-size: 300% 300%; /* 保持原有的比例 */
     opacity: 0.12;
     transition: all 0.3s ease;
+    /* 新增屬性 */
+    background-clip: content-box;
+    object-fit: contain; /* 確保圖片內容不變形 */
 }
 
 /* 為每個卡片設置不同的背景位置 */
@@ -146,6 +149,21 @@ html {
 .app-card:nth-child(7)::before { background-position: 0% 100%; }
 .app-card:nth-child(8)::before { background-position: 50% 100%; }
 .app-card:nth-child(9)::before { background-position: 100% 100%; }
+
+/* 針對不同螢幕尺寸進行優化 */
+@media (max-width: 768px) {
+    .app-card::before {
+        /* 較小的螢幕稍微縮小背景尺寸，減少變形 */
+        background-size: 250% 250%;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-card::before {
+        /* 更小的螢幕進一步縮小背景尺寸 */
+        background-size: 200% 200%;
+    }
+}
 
 /* 懸停效果 */
 .app-card:hover {
