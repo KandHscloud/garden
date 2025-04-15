@@ -3116,6 +3116,8 @@ document.addEventListener('DOMContentLoaded', checkPastEvents);
 
 // 切換月份時重新執行檢查
 function switchMonth(month) {
+    console.log('切換到月份:', month);
+    
     // 使用ID直接選取按鈕
     const aprilTab = document.getElementById('april-tab');
     const mayTab = document.getElementById('may-tab');
@@ -3124,14 +3126,18 @@ function switchMonth(month) {
     aprilTab.classList.remove('active');
     mayTab.classList.remove('active');
     
+    // 隱藏所有月份內容
+    document.getElementById('aprilSchedule').style.display = 'none';
+    document.getElementById('maySchedule').style.display = 'none';
+    
     // 根據所選月份設置active類和顯示相應內容
-    if (month === 'april' || month === 'april') { // 這裡使用更清晰的條件
+    if (month === 'april') {
+        console.log('顯示四月內容');
         aprilTab.classList.add('active');
         document.getElementById('aprilSchedule').style.display = 'block';
-        document.getElementById('maySchedule').style.display = 'none';
     } else if (month === 'may') {
+        console.log('顯示五月內容');
         mayTab.classList.add('active');
-        document.getElementById('aprilSchedule').style.display = 'none';
         document.getElementById('maySchedule').style.display = 'block';
     }
     
