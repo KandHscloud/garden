@@ -3940,14 +3940,16 @@ const getHolidayPlans = () => {
 
         {/* 查看完整行程表按鈕 */}
         <button 
-          onClick={() => {
-            document.getElementById('dailyOverviewPanel').classList.remove('active');
-            document.getElementById('schedulePanel').classList.add('active');
-          }}
-          className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl py-3 md:py-4 px-4 shadow-lg hover:opacity-90 transition-opacity text-sm md:text-base font-medium"
-        >
-          查看完整行程表        
-        </button>
+  onClick={() => {
+    document.getElementById('dailyOverviewPanel').classList.remove('active');
+    document.getElementById('schedulePanel').classList.add('active');
+    // 添加這一行，確保切換到行程表時會顯示4月份內容
+    switchMonth('april');
+  }}
+  className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl py-3 md:py-4 px-4 shadow-lg hover:opacity-90 transition-opacity text-sm md:text-base font-medium"
+>
+  查看完整行程表        
+</button>
       </div>
     </div>
   );
