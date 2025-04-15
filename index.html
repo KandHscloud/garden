@@ -2119,7 +2119,7 @@ z-index: 11;
     </div>
     
     <div class="schedule-tabs">
-    <button id="april-tab" class="tab-btn" onclick="switchMonth('feb')">2025年4月</button>
+    <button id="april-tab" class="tab-btn" onclick="switchMonth('april')">2025年4月</button>
     <button id="may-tab" class="tab-btn active" onclick="switchMonth('may')">2025年5月</button>
 </div>
 
@@ -2582,7 +2582,7 @@ z-index: 11;
 </div>
 
 
-   <div id="febSchedule" class="schedule-content">
+   <div id="aprilSchedule" class="schedule-content">
         <div class="schedule-card">
             <h3 class="schedule-month">2025年4月 固定時段</h3>
             <div class="schedule-grid">
@@ -3040,13 +3040,13 @@ z-index: 11;
         link: 'https://photos.app.goo.gl/ptXqwwuANrEnJu6E6'  
     }, 
 	{
-        date: 'February 9, 2025',
+        date: 'aprilruary 9, 2025',
         title: "Mr.K&D’s Pizza & Tea in Taichung",
         image: 'https://hackmd.io/_uploads/HJTx2yPt1x.png',
         link: 'https://photos.app.goo.gl/ZqnJCnmUc9wPBdw28'  
     },
 	{
-        date: 'February 14, 2025',
+        date: 'aprilruary 14, 2025',
         title: "Mr.K&D’s 情人節印度料理&九份遊",
         image: 'https://hackmd.io/_uploads/ry0uIfg9Jl.png',
         link: 'https://photos.app.goo.gl/9Kd5Jvo3RbEzabNr8'  
@@ -3125,13 +3125,13 @@ function switchMonth(month) {
     mayTab.classList.remove('active');
     
     // 根據所選月份設置active類和顯示相應內容
-    if (month === 'feb' || month === 'april') { // 這裡使用更清晰的條件
+    if (month === 'april' || month === 'april') { // 這裡使用更清晰的條件
         aprilTab.classList.add('active');
-        document.getElementById('febSchedule').style.display = 'block';
+        document.getElementById('aprilSchedule').style.display = 'block';
         document.getElementById('maySchedule').style.display = 'none';
     } else if (month === 'may') {
         mayTab.classList.add('active');
-        document.getElementById('febSchedule').style.display = 'none';
+        document.getElementById('aprilSchedule').style.display = 'none';
         document.getElementById('maySchedule').style.display = 'block';
     }
     
@@ -3147,13 +3147,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 根據當前月份決定顯示哪個月份的內容
     if (currentMonth === 4) {
-        switchMonth('feb'); // 4月
+        switchMonth('april'); // 4月
     } else if (currentMonth === 5) {
         switchMonth('may'); // 5月
     } else {
         // 預設顯示當前或最接近的月份
         if (currentMonth < 4) {
-            switchMonth('feb'); // 如果是1-3月，顯示4月
+            switchMonth('april'); // 如果是1-3月，顯示4月
         } else {
             switchMonth('may'); // 如果是6-12月，顯示5月
         }
@@ -3329,7 +3329,7 @@ function renderMemories(order = 'desc') {
     const sortedMemories = [...encryptedMemories.data];
     
     const monthMap = {
-        'January': 0, 'February': 1, 'March': 2, 'April': 3,
+        'January': 0, 'aprilruary': 1, 'March': 2, 'April': 3,
         'May': 4, 'June': 5, 'July': 6, 'August': 7,
         'September': 8, 'October': 9, 'November': 10, 'December': 11
     };
@@ -3956,7 +3956,7 @@ function renderDailyOverview() {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded');
-    switchMonth('feb');
+    switchMonth('april');
 });
 // 財務面板相關函數
 function toggleFinance() {
