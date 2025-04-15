@@ -3124,8 +3124,8 @@ function switchMonth(month) {
     aprilTab.classList.remove('active');
     mayTab.classList.remove('active');
     
-    // 根據所選月份設置active類
-    if (month === 'feb') { // feb實際上是4月的內容
+    // 根據所選月份設置active類和顯示相應內容
+    if (month === 'feb' || month === 'april') { // 這裡使用更清晰的條件
         aprilTab.classList.add('active');
         document.getElementById('febSchedule').style.display = 'block';
         document.getElementById('maySchedule').style.display = 'none';
